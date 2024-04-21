@@ -53,6 +53,7 @@ dependencies {
 
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.compose)
+    implementation(libs.bundles.retrofit)
     implementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
