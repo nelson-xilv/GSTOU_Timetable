@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nelsonxilv.gstoutimetable.data.TimetableApi
+import com.nelsonxilv.gstoutimetable.data.network.TimetableApi
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class TimetableViewModel : ViewModel() {
-    var timetableUiState: String by mutableStateOf("")
+    var timetableUiState: TimetableUiState by mutableStateOf(TimetableUiState.Loading)
         private set
 
     init {
@@ -18,8 +20,17 @@ class TimetableViewModel : ViewModel() {
 
     fun getTimetable() {
         viewModelScope.launch {
-            val listResult = TimetableApi.retrofitService.getSchedule()
-            timetableUiState = listResult
+            timetableUiState = TimetableUiState.Loading
+            timetableUiState = try {
+                val listResult = TimetableApi.retrofitService.getSchedule()
+                TimetableUiState.Success(
+                    "Succes: ${listResult.size} lessons retrieved"
+                )
+            } catch (e: IOException) {
+                TimetableUiState.Error
+            } catch (e: HttpException) {
+                TimetableUiState.Error
+            }
         }
     }
 }
