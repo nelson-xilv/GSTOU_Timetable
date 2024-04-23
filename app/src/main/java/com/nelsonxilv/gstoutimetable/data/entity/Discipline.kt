@@ -9,8 +9,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Discipline(
-    val id: Int,
-    val name: String,
+    val id: Int?,
+    val name: String?,
     @SerialName("lecture_teacher")
     val lectureTeacher: LectureTeacher?,
     @SerialName("practice_teacher")
@@ -21,6 +21,6 @@ data class Discipline(
      * [reportingType] - тип предмета: экзамен или зачет.
      */
     @SerialName("reporting_type")
-    val reportingType: String,
-    val semester: String
+    val reportingType: String?,
+    val semester: String?
 )
