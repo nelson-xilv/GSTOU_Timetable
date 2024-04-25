@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nelsonxilv.gstoutimetable.data.network.TimetableApi
+import com.nelsonxilv.gstoutimetable.data.network.TimetableApiFactory
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -22,7 +22,7 @@ class TimetableViewModel : ViewModel() {
         viewModelScope.launch {
             timetableUiState = TimetableUiState.Loading
             timetableUiState = try {
-                val listResult = TimetableApi.retrofitService.getSchedule()
+                val listResult = TimetableApiFactory.retrofitService.getSchedule()
                 TimetableUiState.Success(
                     "Succes: ${listResult.size} lessons retrieved"
                 )
