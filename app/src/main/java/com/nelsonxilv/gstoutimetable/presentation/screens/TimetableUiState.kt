@@ -1,7 +1,7 @@
 package com.nelsonxilv.gstoutimetable.presentation.screens
 
 sealed interface TimetableUiState {
-    data class Success(val lessons: String) : TimetableUiState
-    object Error : TimetableUiState
-    object Loading : TimetableUiState
+    data class Success(val date: String, val lessons: String) : TimetableUiState
+    data object Error : TimetableUiState
+    data object Loading : TimetableUiState
 }

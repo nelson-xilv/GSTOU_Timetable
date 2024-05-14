@@ -27,8 +27,12 @@ fun HomeScreen(
     when (timetableUiState) {
         is TimetableUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxWidth())
         is TimetableUiState.Success -> ResultScreen(
-            timetableUiState.lessons, modifier = modifier.fillMaxWidth()
+            date = timetableUiState.date,
+            timetable = timetableUiState.lessons,
+            modifier = modifier.fillMaxWidth(),
+            contextPadding = contentPadding
         )
+
         is TimetableUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
     }
 }
@@ -64,12 +68,27 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ResultScreen(timetable: String, modifier: Modifier = Modifier) {
+fun ResultScreen(
+    date: String,
+    timetable: String,
+    modifier: Modifier = Modifier,
+    contextPadding: PaddingValues
+) {
     Box(
-        contentAlignment = Alignment.Center,
         modifier = modifier
+            .fillMaxSize()
+            .padding(contextPadding)
     ) {
-        Text(text = timetable)
+        Text(
+            text = date,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        Text(
+            text = timetable,
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
 
@@ -77,6 +96,11 @@ fun ResultScreen(timetable: String, modifier: Modifier = Modifier) {
 @Composable
 fun ResultScreenPreview() {
     GSTOUTimetableTheme {
-        ResultScreen("Placeholder result text")
+        HomeScreen(
+            timetableUiState = TimetableUiState.Success(
+                "22 March, 2023",
+                "Placeholder result text"
+            )
+        )
     }
 }

@@ -1,5 +1,7 @@
 package com.nelsonxilv.gstoutimetable.presentation.screens
 
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.Locale
 
 class TimetableViewModel : ViewModel() {
 
@@ -36,7 +39,8 @@ class TimetableViewModel : ViewModel() {
                 val lessons = repository.getSchedule()
                 _schedule.value = lessons
                 TimetableUiState.Success(
-                    "Succes: ${schedule.value.size} lessons retrieved"
+                    date = getCurrentDate(),
+                    lessons = "Success: ${schedule.value.size} lessons retrieved"
                 )
             } catch (e: IOException) {
                 TimetableUiState.Error
@@ -44,5 +48,11 @@ class TimetableViewModel : ViewModel() {
                 TimetableUiState.Error
             }
         }
+    }
+
+    private fun getCurrentDate(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("dd MMMM, EEEE", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 }
