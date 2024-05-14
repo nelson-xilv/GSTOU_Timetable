@@ -38,6 +38,31 @@ fun HomeScreen(
 }
 
 @Composable
+fun ResultScreen(
+    date: String,
+    timetable: String,
+    modifier: Modifier = Modifier,
+    contextPadding: PaddingValues
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(contextPadding)
+    ) {
+        Text(
+            text = date,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        Text(
+            text = timetable,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
+
+@Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
@@ -63,31 +88,6 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
         Text(
             text = "Loading failed",
             modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Composable
-fun ResultScreen(
-    date: String,
-    timetable: String,
-    modifier: Modifier = Modifier,
-    contextPadding: PaddingValues
-) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(contextPadding)
-    ) {
-        Text(
-            text = date,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        )
-        Text(
-            text = timetable,
-            modifier = Modifier.align(Alignment.Center)
         )
     }
 }
