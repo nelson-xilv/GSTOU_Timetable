@@ -1,10 +1,10 @@
-package com.nelsonxilv.gstoutimetable.data.entity
+package com.nelsonxilv.gstoutimetable.data.network.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Lesson(
+data class LessonDto(
     val id: Int?,
     /**
      * [activityType] - тип пары:
@@ -14,8 +14,8 @@ data class Lesson(
      */
     @SerialName("activity_type")
     val activityType: Int?,
-    val auditorium: Auditorium?,
-    val discipline: Discipline?,
+    val auditoriumDto: AuditoriumDto?,
+    val disciplineDto: DisciplineDto?,
     /**
      * [duration] помогает понять сколько клеток занимает пара по вертикали:
      * 1 - пара только на одной определенной неделе [week];
@@ -28,7 +28,7 @@ data class Lesson(
      * Всего подгрупп 2, но если это общая пара для всей группы, то значение будет равно null.
      */
     val groupNumber: Int?,
-    val groups: List<Group>?,
+    val groupsDto: List<GroupDto>?,
     @SerialName("is_split")
     /**
      * [isSplit] содержит в себе значение о том,

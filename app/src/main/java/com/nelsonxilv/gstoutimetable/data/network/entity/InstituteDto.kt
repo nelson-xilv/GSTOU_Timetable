@@ -1,9 +1,9 @@
-package com.nelsonxilv.gstoutimetable.data.entity
+package com.nelsonxilv.gstoutimetable.data.network.entity
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Institute(
+data class InstituteDto(
     val id: Int?,
     val name: String?
 )

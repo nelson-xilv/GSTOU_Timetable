@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable.data.entity
+package com.nelsonxilv.gstoutimetable.data.network.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -8,15 +8,15 @@ import kotlinx.serialization.Serializable
  * которые ведут данную дисциплину.
  */
 @Serializable
-data class Discipline(
+data class DisciplineDto(
     val id: Int?,
     val name: String?,
     @SerialName("lecture_teacher")
-    val lectureTeacher: LectureTeacher?,
+    val lectureTeacherDto: LectureTeacherDto?,
     @SerialName("practice_teacher")
-    val practiceTeacher: PracticeTeacher?,
+    val practiceTeacherDto: PracticeTeacherDto?,
     @SerialName("lab_teacher")
-    val labTeacher: LabTeacher?,
+    val labTeacherDto: LabTeacherDto?,
     /**
      * [reportingType] - тип предмета: экзамен или зачет.
      */

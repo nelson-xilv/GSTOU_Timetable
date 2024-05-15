@@ -1,10 +1,10 @@
-package com.nelsonxilv.gstoutimetable.data.entity
+package com.nelsonxilv.gstoutimetable.data.network.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Group(
+data class GroupDto(
     val id: Int?,
     /**
      * [name] - краткое название группы.
@@ -20,5 +20,5 @@ data class Group(
      */
     @SerialName("training_form")
     val trainingForm: String?,
-    val institute: Institute?
+    val instituteDto: InstituteDto?
 )

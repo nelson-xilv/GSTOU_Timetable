@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nelsonxilv.gstoutimetable.data.TimetableRepository
-import com.nelsonxilv.gstoutimetable.data.entity.Lesson
+import com.nelsonxilv.gstoutimetable.data.network.entity.LessonDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,8 +21,8 @@ class TimetableViewModel : ViewModel() {
 
     private val repository = TimetableRepository()
 
-    private val _schedule: MutableStateFlow<List<Lesson>> = MutableStateFlow(emptyList())
-    val schedule: StateFlow<List<Lesson>>
+    private val _schedule: MutableStateFlow<List<LessonDto>> = MutableStateFlow(emptyList())
+    val schedule: StateFlow<List<LessonDto>>
         get() = _schedule.asStateFlow()
 
     var timetableUiState: TimetableUiState by mutableStateOf(TimetableUiState.Loading)
