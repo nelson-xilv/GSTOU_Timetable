@@ -3,8 +3,9 @@ package com.nelsonxilv.gstoutimetable.presentation.screens.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,16 +14,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
+import com.nelsonxilv.gstoutimetable.data.model.Lesson
+import com.nelsonxilv.gstoutimetable.data.model.TimeInterval
 import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
 
 @Composable
 fun ScheduleItem(
     lessonNumber: Int,
-    lesson: FakeLesson,
+    lesson: Lesson,
     modifier: Modifier = Modifier,
     shape: Shape = DefaultShape
 ) {
@@ -31,28 +34,50 @@ fun ScheduleItem(
         modifier = modifier
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_large))
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = lessonNumber.toString(),
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(end = dimensionResource(id = R.dimen.padding_large))
+                text = "$lessonNumber",
+                style = MaterialTheme.typography.headlineSmall
             )
-            Column {
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
-                    text = lesson.name,
-                    style = TextStyle(fontWeight = FontWeight.Bold)
+                    text = "${lesson.name} • ${lesson.teacher}",
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
-                Text(text = lesson.teacher)
+
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text = "${lesson.activityType} ${lesson.auditorium}",
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
-            Spacer(Modifier.weight(1f))
-            Text(
-                text = lesson.time
-            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = lesson.timeInterval.start,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = lesson.timeInterval.end,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
     }
 }
@@ -60,11 +85,14 @@ fun ScheduleItem(
 @Preview
 @Composable
 fun ScheduleItemPreview() {
-    val fakeLesson = FakeLesson(
-        1,
-        "Психология",
-        "Солдатский Л.В.",
-        "9:00\n10:20"
+    val fakeLesson = Lesson(
+        name = "Психология",
+        teacher = "Солдатский Л.В.",
+        auditorium = "ГУК 4-06",
+        groups = listOf("ИВТ-23-1э", "ИCТ-23-2э"),
+        timeInterval = TimeInterval("9:00", "10:20"),
+        activityType = "Лек.",
+        dayOfWeek = 1
     )
     ScheduleItem(1, lesson = fakeLesson)
 }
