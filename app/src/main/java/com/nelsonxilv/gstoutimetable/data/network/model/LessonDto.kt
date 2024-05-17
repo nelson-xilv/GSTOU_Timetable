@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable.data.network.entity
+package com.nelsonxilv.gstoutimetable.data.network.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -14,7 +14,9 @@ data class LessonDto(
      */
     @SerialName("activity_type")
     val activityType: Int?,
+    @SerialName("auditorium")
     val auditoriumDto: AuditoriumDto?,
+    @SerialName("discipline")
     val disciplineDto: DisciplineDto?,
     /**
      * [duration] помогает понять сколько клеток занимает пара по вертикали:
@@ -22,18 +24,19 @@ data class LessonDto(
      * 2 - пара на 2-х неделях.
      */
     val duration: Int?,
-    @SerialName("group_number")
     /**
      * [groupNumber] отображает для какой подгруппы пройдет данная пара.
      * Всего подгрупп 2, но если это общая пара для всей группы, то значение будет равно null.
      */
+    @SerialName("group_number")
     val groupNumber: Int?,
+    @SerialName("groups")
     val groupsDto: List<GroupDto>?,
-    @SerialName("is_split")
     /**
      * [isSplit] содержит в себе значение о том,
      * разделена ли данная пара для подгрупп
      */
+    @SerialName("is_split")
     val isSplit: Boolean?,
     /**
      * [period] говорит о том, в какой последовательности идут пары.

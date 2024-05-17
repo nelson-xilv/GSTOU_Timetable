@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable.data.network.entity
+package com.nelsonxilv.gstoutimetable.data.network.model
 
 import kotlinx.serialization.Serializable
 

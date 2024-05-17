@@ -1,5 +1,8 @@
-package com.nelsonxilv.gstoutimetable.data.network.entity
+package com.nelsonxilv.gstoutimetable.data.network.model
 
+import com.nelsonxilv.gstoutimetable.data.network.model.teacher.LabTeacherDto
+import com.nelsonxilv.gstoutimetable.data.network.model.teacher.LectureTeacherDto
+import com.nelsonxilv.gstoutimetable.data.network.model.teacher.PracticeTeacherDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
