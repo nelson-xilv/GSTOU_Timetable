@@ -10,6 +10,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -22,6 +24,8 @@ import com.nelsonxilv.gstoutimetable.presentation.screens.TimetableViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimetableApp() {
+    val timetableViewModel: TimetableViewModel = viewModel()
+    val timetableUiState by timetableViewModel.timetableUiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -30,9 +34,8 @@ fun TimetableApp() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            val timetableViewModel: TimetableViewModel = viewModel()
             HomeScreen(
-                timetableUiState = timetableViewModel.timetableUiState,
+                timetableUiState = timetableUiState,
                 contentPadding = it
             )
         }
