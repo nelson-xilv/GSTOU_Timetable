@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.Locale
 
-class DataService {
+class TimeService {
 
     fun getDayOfWeekNumber(): Int {
         val dayOfWeek = LocalDate.now().dayOfWeek
