@@ -7,5 +7,7 @@ data class Lesson(
     val groups: List<String>,
     val timeInterval: TimeInterval,
     val activityType: String,
-    val dayOfWeek: Int
+    val period: Int,
+    val dayOfWeek: Int,
+    val week: Int
 )

@@ -24,7 +24,6 @@ import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
 
 @Composable
 fun ScheduleItem(
-    lessonNumber: Int,
     lesson: Lesson,
     modifier: Modifier = Modifier,
     shape: Shape = DefaultShape
@@ -38,7 +37,7 @@ fun ScheduleItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$lessonNumber",
+                text = "${lesson.period}",
                 style = MaterialTheme.typography.headlineSmall
             )
 
@@ -92,7 +91,9 @@ fun ScheduleItemPreview() {
         groups = listOf("ИВТ-23-1э", "ИCТ-23-2э"),
         timeInterval = TimeInterval("9:00", "10:20"),
         activityType = "Лек.",
-        dayOfWeek = 1
+        period = 1,
+        dayOfWeek = 1,
+        week = 0
     )
-    ScheduleItem(1, lesson = fakeLesson)
+    ScheduleItem(lesson = fakeLesson)
 }

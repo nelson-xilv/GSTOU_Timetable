@@ -112,7 +112,9 @@ fun ResultScreenPreview() {
         groups = listOf("ИВТ-23-1э", "ИCТ-23-2э"),
         timeInterval = TimeInterval("9:00", "10:20"),
         activityType = "Лек.",
-        dayOfWeek = 1
+        period = 1,
+        dayOfWeek = 1,
+        week = 0
     )
     val fakeLesson2 = Lesson(
         name = "Английский язык",
@@ -121,7 +123,9 @@ fun ResultScreenPreview() {
         groups = listOf("ИВТ-23-1э"),
         timeInterval = TimeInterval("10:30", "11:50"),
         activityType = "Лек.",
-        dayOfWeek = 1
+        period = 2,
+        dayOfWeek = 1,
+        week = 0
     )
     val fakeLesson3 = Lesson(
         name = "История",
@@ -130,7 +134,9 @@ fun ResultScreenPreview() {
         groups = listOf("ИВТ-23-1э"),
         timeInterval = TimeInterval("13:00", "14:20"),
         activityType = "Пр.",
-        dayOfWeek = 1
+        period = 3,
+        dayOfWeek = 1,
+        week = 0
     )
     val fakeLesson4 = Lesson(
         name = "Программирование",
@@ -139,7 +145,9 @@ fun ResultScreenPreview() {
         groups = listOf("ИВТ-23-1э"),
         timeInterval = TimeInterval("14:30", "15:50"),
         activityType = "Пр.",
-        dayOfWeek = 1
+        period = 4,
+        dayOfWeek = 1,
+        week = 0
     )
 
     val list = listOf(fakeLesson1, fakeLesson2, fakeLesson3, fakeLesson4)

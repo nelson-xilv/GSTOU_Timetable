@@ -28,7 +28,9 @@ class LessonMapper {
             groups = mapGroupsDtoToString(dto.groupsDto),
             timeInterval = getPeriodTime(dto) ?: TimeInterval("00:00", "00:00"),
             activityType = getActivityTypeString(dto) ?: "Unknown",
-            dayOfWeek = dto.weekDay ?: 0
+            period = dto.period,
+            dayOfWeek = dto.weekDay ?: 0,
+            week = dto.week ?: 0
         )
         Log.d(TAG, "Lesson: $lesson")
 
