@@ -41,7 +41,7 @@ fun ScheduleItem(
                 style = MaterialTheme.typography.headlineSmall
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_large)))
 
             Column(
                 modifier = Modifier.weight(1f)
@@ -63,7 +63,7 @@ fun ScheduleItem(
                 )
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_large)))
 
             Column(
                 horizontalAlignment = Alignment.End
@@ -93,7 +93,8 @@ fun ScheduleItemPreview() {
         activityType = "Лек.",
         period = 1,
         dayOfWeek = 1,
-        week = 0
+        week = 0,
+        subgroupNumber = 2
     )
     ScheduleItem(lesson = fakeLesson)
 }

@@ -26,11 +26,12 @@ class LessonMapper {
             teacher = getTeacherName(dto),
             auditorium = dto.auditoriumDto?.name ?: "No room",
             groups = mapGroupsDtoToString(dto.groupsDto),
-            timeInterval = getPeriodTime(dto) ?: TimeInterval("00:00", "00:00"),
+            timeInterval = getPeriodTime(dto),
             activityType = getActivityTypeString(dto) ?: "Unknown",
             period = dto.period,
             dayOfWeek = dto.weekDay ?: 0,
-            week = dto.week ?: 0
+            week = dto.week ?: 0,
+            subgroupNumber = dto.groupNumber ?: 0
         )
         Log.d(TAG, "Lesson: $lesson")
 
@@ -57,14 +58,15 @@ class LessonMapper {
             fullName
         }
     }
+
     private fun mapGroupsDtoToString(dtoList: List<GroupDto>?): List<String> {
         return dtoList?.map { group ->
             group.name ?: "Unknown Group"
         } ?: emptyList()
     }
 
-    private fun getPeriodTime(dto: LessonDto): TimeInterval? {
-        return periodToTime[dto.period]
+    private fun getPeriodTime(dto: LessonDto): TimeInterval {
+        return periodToTime[dto.period] ?: TimeInterval("00:00", "00:00")
     }
 
     private fun getActivityTypeString(dto: LessonDto): String? {

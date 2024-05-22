@@ -54,7 +54,8 @@ fun ScheduleTablePreview() {
         activityType = "Лек.",
         period = 1,
         dayOfWeek = 1,
-        week = 0
+        week = 0,
+        subgroupNumber = 0
     )
     val fakeLesson2 = Lesson(
         name = "Английский язык",
@@ -65,7 +66,8 @@ fun ScheduleTablePreview() {
         activityType = "Лек.",
         period = 2,
         dayOfWeek = 1,
-        week = 0
+        week = 0,
+        subgroupNumber = 0
     )
     val fakeLesson3 = Lesson(
         name = "История",
@@ -76,7 +78,8 @@ fun ScheduleTablePreview() {
         activityType = "Пр.",
         period = 3,
         dayOfWeek = 1,
-        week = 0
+        week = 0,
+        subgroupNumber = 1
     )
     val fakeLesson4 = Lesson(
         name = "Программирование",
@@ -87,7 +90,8 @@ fun ScheduleTablePreview() {
         activityType = "Пр.",
         period = 4,
         dayOfWeek = 1,
-        week = 0
+        week = 0,
+        subgroupNumber = 2
     )
 
     val list = listOf(fakeLesson1, fakeLesson2, fakeLesson3, fakeLesson4)

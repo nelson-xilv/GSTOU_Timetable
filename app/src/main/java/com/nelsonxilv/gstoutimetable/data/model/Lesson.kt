@@ -9,5 +9,6 @@ data class Lesson(
     val activityType: String,
     val period: Int,
     val dayOfWeek: Int,
-    val week: Int
+    val week: Int,
+    val subgroupNumber: Int
 )
