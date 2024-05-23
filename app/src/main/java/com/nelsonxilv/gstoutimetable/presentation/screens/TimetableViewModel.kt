@@ -23,12 +23,13 @@ class TimetableViewModel : ViewModel() {
     }
 
     fun getTodaySchedule(groupName: String) {
+        val correctGroupName = removeAllWhitespace(groupName)
         viewModelScope.launch {
             _timetableUiState.value = TimetableUiState.Loading
             try {
                 _timetableUiState.value = TimetableUiState.Success(
                     date = timeService.getCurrentDate(),
-                    lessons = filterTodaySchedule(repository.getSchedule(groupName)),
+                    lessons = filterTodaySchedule(repository.getSchedule(correctGroupName)),
                     currentWeekType = timeService.getCurrentWeekType()
                 )
             } catch (e: Exception) {
@@ -50,6 +51,10 @@ class TimetableViewModel : ViewModel() {
         Log.d(TAG, "Current week type: $currentWeekType")
         Log.d(TAG, "Number day of week: $dayOfWeekNumber\nLesson list: $lessonList")
         return lessonList
+    }
+
+    private fun removeAllWhitespace(input: String): String {
+        return input.replace(" ", "")
     }
 
     companion object {
