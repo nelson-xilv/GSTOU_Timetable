@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,6 +47,7 @@ fun HomeScreen(
         is TimetableUiState.Success -> ResultScreen(
             date = timetableUiState.date,
             lessons = timetableUiState.lessons,
+            currentWeekType = timetableUiState.currentWeekType,
             modifier = modifier.fillMaxSize(),
             contentPadding = contentPadding
         )
@@ -58,6 +60,7 @@ fun HomeScreen(
 fun ResultScreen(
     date: String,
     lessons: List<Lesson>,
+    currentWeekType: Int,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues
 ) {
@@ -73,7 +76,14 @@ fun ResultScreen(
                 .fillMaxWidth()
                 .padding(horizontal = dimensionResource(id = R.dimen.padding_large))
         ) {
-            Text(text = date)
+            Column {
+                Text(text = date)
+
+                Text(
+                    text = "$currentWeekType неделя",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
 
             val subgroups = listOf(FirstSubgroup, SecondSubgroup)
 
@@ -90,12 +100,12 @@ fun ResultScreen(
                             if (number == selectedSubgroupNumber) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_done),
-                                    contentDescription = "Done icon"
+                                    contentDescription = null
                                 )
                             } else {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_group),
-                                    contentDescription = "Group icon"
+                                    contentDescription = null
                                 )
                             }
                         }
@@ -129,7 +139,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_large)))
 
         Text(
-            text = "Loading, please wait..."
+            text = "Загрузка, пожалуйста, подождите..."
         )
     }
 }
@@ -143,10 +153,10 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
     ) {
         Image(
             painter = painterResource(id = R.drawable.error_img),
-            contentDescription = ""
+            contentDescription = null
         )
         Text(
-            text = "Loading failed",
+            text = "Ошибка загрузки",
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
         )
     }
@@ -210,7 +220,8 @@ fun ResultScreenPreview() {
         HomeScreen(
             timetableUiState = TimetableUiState.Success(
                 "22 March, 2023",
-                list
+                list,
+                2
             ),
             modifier = Modifier.fillMaxWidth(),
         )

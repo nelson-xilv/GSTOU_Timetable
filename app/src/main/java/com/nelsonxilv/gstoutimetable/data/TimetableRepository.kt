@@ -9,8 +9,8 @@ class TimetableRepository {
 
     private val lessonMapper = LessonMapper()
 
-    suspend fun getSchedule(): List<Lesson> {
-        val lessonDtoList = TimetableApiFactory.retrofitService.getSchedule()
+    suspend fun getSchedule(groupName: String): List<Lesson> {
+        val lessonDtoList = TimetableApiFactory.retrofitService.getSchedule(groupName)
         Log.d(TAG, "Lesson DTO list: $lessonDtoList")
 
         val lessonList = lessonDtoList.map { dto -> lessonMapper.mapDtoToModel(dto) }

@@ -19,16 +19,17 @@ class TimetableViewModel : ViewModel() {
     val timetableUiState: StateFlow<TimetableUiState> = _timetableUiState
 
     init {
-        getTodaySchedule()
+        getTodaySchedule("ивт-23-1э")
     }
 
-    private fun getTodaySchedule() {
+    fun getTodaySchedule(groupName: String) {
         viewModelScope.launch {
             _timetableUiState.value = TimetableUiState.Loading
             try {
                 _timetableUiState.value = TimetableUiState.Success(
                     date = timeService.getCurrentDate(),
-                    lessons = filterTodaySchedule(repository.getSchedule())
+                    lessons = filterTodaySchedule(repository.getSchedule(groupName)),
+                    currentWeekType = timeService.getCurrentWeekType()
                 )
             } catch (e: Exception) {
                 _timetableUiState.value = TimetableUiState.Error
