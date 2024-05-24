@@ -98,7 +98,7 @@ fun FullSearchBar(
         },
         active = isSearchVisible,
         onActiveChange = { active -> onActiveChanged(active) },
-        placeholder = { Text(text = "Поиск по группе...") },
+        placeholder = { Text(text = stringResource(R.string.search_by_group)) },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
