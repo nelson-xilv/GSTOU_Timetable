@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
@@ -80,7 +81,7 @@ fun ResultScreen(
                 Text(text = date)
 
                 Text(
-                    text = "$currentWeekType неделя",
+                    text = stringResource(R.string.number_week, currentWeekType),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -94,7 +95,7 @@ fun ResultScreen(
                         selected = number == selectedSubgroupNumber,
                         onClick = { selectedSubgroupNumber = number },
                         label = {
-                            Text("$number")
+                            Text(stringResource(R.string.subgroup_number, number))
                         },
                         leadingIcon = {
                             if (number == selectedSubgroupNumber) {
@@ -139,7 +140,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_large)))
 
         Text(
-            text = "Загрузка, пожалуйста, подождите..."
+            text = stringResource(R.string.loading_please_wait)
         )
     }
 }
@@ -156,7 +157,7 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
             contentDescription = null
         )
         Text(
-            text = "Ошибка загрузки",
+            text = stringResource(R.string.loading_failed),
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
         )
     }

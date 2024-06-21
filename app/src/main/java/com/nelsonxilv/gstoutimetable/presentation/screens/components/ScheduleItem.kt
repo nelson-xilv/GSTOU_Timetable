@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,9 @@ import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.data.model.Lesson
 import com.nelsonxilv.gstoutimetable.data.model.TimeInterval
 import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
+
+private const val MaxLinesTitle = 2
+private const val MaxLinesText = 1
 
 @Composable
 fun ScheduleItem(
@@ -47,18 +51,26 @@ fun ScheduleItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "${lesson.name} • ${lesson.teacher}",
+                    text = stringResource(
+                        R.string.lesson_name_and_teacher_name,
+                        lesson.name,
+                        lesson.teacher
+                    ),
                     style = MaterialTheme.typography.labelLarge,
-                    maxLines = 2,
+                    maxLines = MaxLinesTitle,
                     overflow = TextOverflow.Ellipsis
                 )
 
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = "${lesson.activityType} ${lesson.auditorium}",
+                    text = stringResource(
+                        R.string.activity_type_and_auditorium,
+                        lesson.activityType,
+                        lesson.auditorium
+                    ),
                     style = MaterialTheme.typography.bodySmall,
-                    maxLines = 1,
+                    maxLines = MaxLinesText,
                     overflow = TextOverflow.Ellipsis
                 )
             }
