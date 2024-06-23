@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable.presentation.screens.components
+package com.nelsonxilv.gstoutimetable.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

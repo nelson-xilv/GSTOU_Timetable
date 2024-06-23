@@ -33,8 +33,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.presentation.screens.HomeScreen
-import com.nelsonxilv.gstoutimetable.presentation.screens.TimetableViewModel
+import com.nelsonxilv.gstoutimetable.presentation.screen.HomeScreen
+import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +72,10 @@ fun TimetableApp() {
             Column {
                 HomeScreen(
                     timetableUiState = timetableUiState,
-                    contentPadding = it
+                    contentPadding = it,
+                    onFilterChipClick = { subgroupNumber ->
+                        timetableViewModel.updateSelectedSubgroup(subgroupNumber)
+                    }
                 )
             }
         }

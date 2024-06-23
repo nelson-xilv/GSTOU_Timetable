@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable.presentation.screens.components
+package com.nelsonxilv.gstoutimetable.presentation.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn

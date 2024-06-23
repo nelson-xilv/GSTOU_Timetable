@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable
+package com.nelsonxilv.gstoutimetable.presentation.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
