@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.presentation.screen.HomeScreen
+import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableUiState
 import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +51,8 @@ fun TimetableApp() {
         topBar = {
             TimetableAppBar(
                 scrollBehavior = scrollBehavior,
-                onSearchGroupsIconClick = { isSearchVisible = !isSearchVisible }
+                onSearchGroupsIconClick = { isSearchVisible = !isSearchVisible },
+                timetableUiState = timetableUiState
             )
 
             AnimatedVisibility(
@@ -109,9 +111,7 @@ fun FullSearchBar(
             )
         },
         modifier = modifier.fillMaxWidth()
-    ) {
-
-    }
+    ) {  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -119,13 +119,21 @@ fun FullSearchBar(
 fun TimetableAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     onSearchGroupsIconClick: () -> Unit,
+    timetableUiState: TimetableUiState,
     modifier: Modifier = Modifier
 ) {
+
+    val topAppBarText = if (timetableUiState is TimetableUiState.Success)  {
+        timetableUiState.currentGroup
+    } else {
+        stringResource(id = R.string.app_name)
+    }
+
     TopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
             Text(
-                text = stringResource(R.string.app_name),
+                text = topAppBarText,
                 style = MaterialTheme.typography.headlineSmall,
             )
         },

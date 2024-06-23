@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.presentation.components.content.EmptyLessonsContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ErrorContent
+import com.nelsonxilv.gstoutimetable.presentation.components.content.HelloContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.LoadingContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ResultContent
 
@@ -34,7 +35,7 @@ fun HomeScreen(
         label = "Animated Content"
     ) { targetState ->
         when (targetState) {
-            is TimetableUiState.Loading -> LoadingContent(modifier.fillMaxSize())
+
             is TimetableUiState.Success -> ResultContent(
                 uiState = targetState,
                 onFilterChipClick = onFilterChipClick,
@@ -42,8 +43,10 @@ fun HomeScreen(
                 contentPadding = contentPadding
             )
 
+            is TimetableUiState.Loading -> LoadingContent(modifier.fillMaxSize())
             is TimetableUiState.Error -> ErrorContent(modifier.fillMaxSize())
             is TimetableUiState.EmptyTimetable -> EmptyLessonsContent(modifier.fillMaxSize())
+            is TimetableUiState.Hello -> HelloContent(modifier.fillMaxSize())
         }
     }
 }

@@ -14,18 +14,18 @@ import androidx.compose.ui.res.stringResource
 import com.nelsonxilv.gstoutimetable.R
 
 @Composable
-fun ErrorContent(modifier: Modifier = Modifier) {
+fun HelloContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.error_img),
+            painter = painterResource(id = R.drawable.search_groups_img),
             contentDescription = null
         )
         Text(
-            text = stringResource(R.string.loading_failed),
+            text = stringResource(R.string.hello_there),
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
         )
     }

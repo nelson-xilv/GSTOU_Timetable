@@ -130,7 +130,8 @@ fun ResultScreenPreview() {
             "22 March, 2023",
             list,
             2,
-            1
+            1,
+            "ИВТ-23М"
         ),
         onFilterChipClick = {  },
         modifier = Modifier.fillMaxWidth(),

@@ -10,21 +10,18 @@ import com.nelsonxilv.gstoutimetable.utils.getDayOfWeekNumber
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale.getDefault
 
 class TimetableViewModel : ViewModel() {
 
     private val repository = TimetableRepository()
 
-    private val _timetableUiState = MutableStateFlow<TimetableUiState>(TimetableUiState.Loading)
+    private val _timetableUiState = MutableStateFlow<TimetableUiState>(TimetableUiState.Hello)
     val timetableUiState: StateFlow<TimetableUiState> = _timetableUiState
 
     private val todayLessons = MutableStateFlow<List<Lesson>>(emptyList())
-
-    private var selectedSubgroupNumber = MutableStateFlow(1)
-
-    init {
-        getTodaySchedule("ивт-23-1э")
-    }
+    private val currentGroup = MutableStateFlow("")
+    private var selectedSubgroupNumber = MutableStateFlow(DEFAULT_SUBGROUP_NUM)
 
     fun getTodaySchedule(groupName: String) {
         val correctGroupName = removeAllWhitespace(groupName)
@@ -33,6 +30,7 @@ class TimetableViewModel : ViewModel() {
             try {
                 val allLessons = repository.getSchedule(correctGroupName)
                 todayLessons.value = filterTodaySchedule(allLessons)
+                currentGroup.value = groupName.uppercase(getDefault())
                 updateState(todayLessons.value)
                 updateSelectedSubgroup(selectedSubgroupNumber.value)
             } catch (e: Exception) {
@@ -87,12 +85,17 @@ class TimetableViewModel : ViewModel() {
                 date = getCurrentDate(),
                 lessons = filteredLessons,
                 currentWeekType = getCurrentWeekType(),
-                selectedSubgroupNumber = selectedSubgroupNumber.value
+                selectedSubgroupNumber = selectedSubgroupNumber.value,
+                currentGroup = currentGroup.value
             )
         }
     }
 
     private fun removeAllWhitespace(input: String): String {
         return input.replace(" ", "")
+    }
+
+    companion object {
+        private const val DEFAULT_SUBGROUP_NUM = 1
     }
 }

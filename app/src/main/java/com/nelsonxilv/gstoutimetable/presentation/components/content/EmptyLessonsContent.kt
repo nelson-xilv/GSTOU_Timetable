@@ -1,9 +1,9 @@
 package com.nelsonxilv.gstoutimetable.presentation.components.content
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +22,7 @@ fun EmptyLessonsContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
+        Icon(
             painter = painterResource(id = R.drawable.sleep_img),
             contentDescription = null
         )
