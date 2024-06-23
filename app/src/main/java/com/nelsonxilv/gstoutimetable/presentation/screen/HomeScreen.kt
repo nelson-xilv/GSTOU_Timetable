@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.nelsonxilv.gstoutimetable.presentation.components.content.EmptyLessonsContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ErrorContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.LoadingContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ResultContent
@@ -42,6 +43,7 @@ fun HomeScreen(
             )
 
             is TimetableUiState.Error -> ErrorContent(modifier.fillMaxSize())
+            is TimetableUiState.EmptyTimetable -> EmptyLessonsContent(modifier.fillMaxSize())
         }
     }
 }

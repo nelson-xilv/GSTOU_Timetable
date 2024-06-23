@@ -80,12 +80,16 @@ class TimetableViewModel : ViewModel() {
     }
 
     private fun updateState(filteredLessons: List<Lesson>) {
-        _timetableUiState.value = TimetableUiState.Success(
-            date = getCurrentDate(),
-            lessons = filteredLessons,
-            currentWeekType = getCurrentWeekType(),
-            selectedSubgroupNumber = selectedSubgroupNumber.value
-        )
+        if (filteredLessons.isEmpty()) {
+            _timetableUiState.value = TimetableUiState.EmptyTimetable
+        } else {
+            _timetableUiState.value = TimetableUiState.Success(
+                date = getCurrentDate(),
+                lessons = filteredLessons,
+                currentWeekType = getCurrentWeekType(),
+                selectedSubgroupNumber = selectedSubgroupNumber.value
+            )
+        }
     }
 
     private fun removeAllWhitespace(input: String): String {
