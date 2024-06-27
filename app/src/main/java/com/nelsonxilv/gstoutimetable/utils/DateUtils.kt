@@ -6,11 +6,11 @@ import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.Locale
 
-const val LANGUAGE = "ru"
-const val COUNTRY = "RU"
-const val PATTERN_DATE_FORMAT = "dd MMMM, EEEE"
-const val FIRST_WEEK = 1
-const val SECOND_WEEK = 2
+private const val LANGUAGE = "ru"
+private const val COUNTRY = "RU"
+private const val PATTERN_DATE_FORMAT = "dd MMMM, EEEE"
+private const val FIRST_WEEK = 1
+private const val SECOND_WEEK = 2
 
 fun getDayOfWeekNumber(): Int {
     val dayOfWeek = LocalDate.now().dayOfWeek

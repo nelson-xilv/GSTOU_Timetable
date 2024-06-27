@@ -39,8 +39,8 @@ import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimetableApp() {
-    val timetableViewModel: TimetableViewModel = viewModel()
+fun TimetableApp(timetableViewModel: TimetableViewModel = viewModel()) {
+
     val timetableUiState by timetableViewModel.timetableUiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 

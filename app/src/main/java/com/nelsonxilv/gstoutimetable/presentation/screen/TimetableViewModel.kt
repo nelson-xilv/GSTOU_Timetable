@@ -7,14 +7,17 @@ import com.nelsonxilv.gstoutimetable.data.model.Lesson
 import com.nelsonxilv.gstoutimetable.utils.getCurrentDate
 import com.nelsonxilv.gstoutimetable.utils.getCurrentWeekType
 import com.nelsonxilv.gstoutimetable.utils.getDayOfWeekNumber
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale.getDefault
+import javax.inject.Inject
 
-class TimetableViewModel : ViewModel() {
-
-    private val repository = TimetableRepository()
+@HiltViewModel
+class TimetableViewModel @Inject constructor(
+    private val repository: TimetableRepository
+) : ViewModel() {
 
     private val _timetableUiState = MutableStateFlow<TimetableUiState>(TimetableUiState.Hello)
     val timetableUiState: StateFlow<TimetableUiState> = _timetableUiState

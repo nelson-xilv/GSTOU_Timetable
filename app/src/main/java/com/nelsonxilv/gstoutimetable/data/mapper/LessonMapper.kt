@@ -5,8 +5,9 @@ import com.nelsonxilv.gstoutimetable.data.model.Lesson
 import com.nelsonxilv.gstoutimetable.data.model.TimeInterval
 import com.nelsonxilv.gstoutimetable.data.network.model.GroupDto
 import com.nelsonxilv.gstoutimetable.data.network.model.LessonDto
+import javax.inject.Inject
 
-class LessonMapper {
+class LessonMapper @Inject constructor() {
 
     private val periodToTime = mapOf(
         1 to TimeInterval("9:00", "10:20"),
