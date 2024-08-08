@@ -61,7 +61,7 @@ fun TimetableApp(timetableViewModel: TimetableViewModel = viewModel()) {
                 exit = fadeOut()
             ) {
                 FullSearchBar(
-                    onQueryChange = { query -> timetableViewModel.getTodaySchedule(query) },
+                    onQueryChange = { query -> timetableViewModel.getTodayLessons(query) },
                     isSearchVisible = isSearchVisible,
                     onActiveChanged = { isSearchVisible = it }
                 )

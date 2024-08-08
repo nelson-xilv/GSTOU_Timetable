@@ -1,15 +1,18 @@
 package com.nelsonxilv.gstoutimetable.presentation.screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nelsonxilv.gstoutimetable.data.TimetableRepository
 import com.nelsonxilv.gstoutimetable.data.model.Lesson
 import com.nelsonxilv.gstoutimetable.utils.getCurrentDate
-import com.nelsonxilv.gstoutimetable.utils.getCurrentWeekType
+import com.nelsonxilv.gstoutimetable.utils.getCurrentWeekNumber
 import com.nelsonxilv.gstoutimetable.utils.getDayOfWeekNumber
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale.getDefault
 import javax.inject.Inject
@@ -19,26 +22,32 @@ class TimetableViewModel @Inject constructor(
     private val repository: TimetableRepository
 ) : ViewModel() {
 
-    private val _timetableUiState = MutableStateFlow<TimetableUiState>(TimetableUiState.Hello)
-    val timetableUiState: StateFlow<TimetableUiState> = _timetableUiState
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        Log.e(TAG, "Error fetching lessons: $exception")
+        _timetableUiState.value = TimetableUiState.Error
+    }
 
-    private val todayLessons = MutableStateFlow<List<Lesson>>(emptyList())
-    private val currentGroup = MutableStateFlow("")
+    private val _timetableUiState = MutableStateFlow<TimetableUiState>(TimetableUiState.Hello)
+    val timetableUiState: StateFlow<TimetableUiState>
+        get() = _timetableUiState.asStateFlow()
+
     private var selectedSubgroupNumber = MutableStateFlow(DEFAULT_SUBGROUP_NUM)
 
-    fun getTodaySchedule(groupName: String) {
+    fun getTodayLessons(groupName: String) {
         val correctGroupName = removeAllWhitespace(groupName)
-        viewModelScope.launch {
+        val dayOfWeek = getDayOfWeekNumber()
+        val currentWeek = getCurrentWeekNumber()
+
+        viewModelScope.launch(coroutineExceptionHandler) {
             _timetableUiState.value = TimetableUiState.Loading
-            try {
-                val allLessons = repository.getSchedule(correctGroupName)
-                todayLessons.value = filterTodaySchedule(allLessons)
-                currentGroup.value = groupName.uppercase(getDefault())
-                updateState(todayLessons.value)
-                updateSelectedSubgroup(selectedSubgroupNumber.value)
-            } catch (e: Exception) {
-                _timetableUiState.value = TimetableUiState.Error
-            }
+            repository.getLessons(correctGroupName)
+                .collect { lessons ->
+                    updateState(
+                        correctGroupName,
+                        lessons.filterTodayLessons(dayOfWeek, currentWeek)
+                    )
+                    updateSelectedSubgroup(selectedSubgroupNumber.value)
+                }
         }
     }
 
@@ -48,27 +57,24 @@ class TimetableViewModel @Inject constructor(
             val currentState = _timetableUiState.value
             if (currentState is TimetableUiState.Success) {
                 val filteredLessons = filterBySubgroup(
-                    currentLessons = todayLessons.value,
+                    currentLessons = currentState.lessons,
                     selectedSubgroupNumber = number
                 )
 
-                updateState(filteredLessons)
+                updateState(currentState.currentGroup, filteredLessons)
             }
         }
     }
 
-    private fun filterTodaySchedule(listFromRepository: List<Lesson>): List<Lesson> {
-        val dayOfWeekNumber = getDayOfWeekNumber()
-        val currentWeekType = getCurrentWeekType()
-
-        val lessonList = listFromRepository.filter { lesson ->
-            lesson.dayOfWeek == dayOfWeekNumber &&
-                    (lesson.week == 0 || lesson.week == currentWeekType)
+    private fun List<Lesson>.filterTodayLessons(
+        dayOfWeek: Int,
+        currentWeekNumber: Int
+    ): List<Lesson> {
+        return this.filter { lesson ->
+            lesson.dayOfWeek == dayOfWeek && (lesson.week == currentWeekNumber || lesson.week == 0)
         }.sortedBy { lesson ->
             lesson.period
         }
-
-        return lessonList
     }
 
     private fun filterBySubgroup(
@@ -80,16 +86,16 @@ class TimetableViewModel @Inject constructor(
         }
     }
 
-    private fun updateState(filteredLessons: List<Lesson>) {
+    private fun updateState(groupName: String, filteredLessons: List<Lesson>) {
         if (filteredLessons.isEmpty()) {
             _timetableUiState.value = TimetableUiState.EmptyTimetable
         } else {
             _timetableUiState.value = TimetableUiState.Success(
                 date = getCurrentDate(),
                 lessons = filteredLessons,
-                currentWeekType = getCurrentWeekType(),
+                currentWeekType = getCurrentWeekNumber(),
                 selectedSubgroupNumber = selectedSubgroupNumber.value,
-                currentGroup = currentGroup.value
+                currentGroup = groupName.uppercase(getDefault())
             )
         }
     }
@@ -100,5 +106,6 @@ class TimetableViewModel @Inject constructor(
 
     companion object {
         private const val DEFAULT_SUBGROUP_NUM = 1
+        private const val TAG = "TimetableViewModel"
     }
 }

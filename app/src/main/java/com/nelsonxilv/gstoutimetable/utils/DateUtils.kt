@@ -26,7 +26,7 @@ fun getCurrentDate(): String {
     return dateFormat.format(calendar.time)
 }
 
-fun getCurrentWeekType(): Int {
+fun getCurrentWeekNumber(): Int {
     val currentDate = Calendar.getInstance()
     val currentYear = currentDate.get(Calendar.YEAR)
 
