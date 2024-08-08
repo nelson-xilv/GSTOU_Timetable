@@ -1,50 +1,49 @@
 package com.nelsonxilv.gstoutimetable.data.mapper
 
-import android.util.Log
 import com.nelsonxilv.gstoutimetable.data.model.Lesson
-import com.nelsonxilv.gstoutimetable.data.model.TimeInterval
+import com.nelsonxilv.gstoutimetable.data.network.model.DisciplineDto
 import com.nelsonxilv.gstoutimetable.data.network.model.GroupDto
 import com.nelsonxilv.gstoutimetable.data.network.model.LessonDto
 import javax.inject.Inject
 
-class LessonMapper @Inject constructor() {
+class LessonMapper @Inject constructor(
+    private val periodToTimeMapper: PeriodToTimeMapper
+) {
 
-    private val periodToTime = mapOf(
-        1 to TimeInterval("9:00", "10:20"),
-        2 to TimeInterval("10:30", "11:50"),
-        3 to TimeInterval("13:00", "14:20"),
-        4 to TimeInterval("14:30", "15:50"),
-        5 to TimeInterval("16:00", "17:20"),
-        6 to TimeInterval("17:30", "18:50"),
-        7 to TimeInterval("19:00", "20:20"),
-        8 to TimeInterval("20:30", "21:50")
-    )
-
-    fun mapDtoToModel(dto: LessonDto): Lesson {
-        Log.d(TAG, "LessonDto: $dto")
-        val lesson = Lesson(
+    fun mapDtoToModel(dto: LessonDto) =
+        Lesson(
+            lessonId = dto.id ?: 0,
             name = dto.disciplineDto?.name ?: "No discipline",
-            teacher = getTeacherName(dto),
+            teacher = getTeacherName(dto.activityType, dto.disciplineDto),
             auditorium = dto.auditoriumDto?.name ?: "No room",
-            groups = mapGroupsDtoToString(dto.groupsDto),
-            timeInterval = getPeriodTime(dto),
-            activityType = getActivityTypeString(dto) ?: "Unknown",
+            groupsNames = mapGroupsDtoToString(dto.groupsDto),
+            timeInterval = periodToTimeMapper.getPeriodTime(dto.period),
+            activityType = getActivityTypeString(dto.activityType),
             period = dto.period,
             dayOfWeek = dto.weekDay ?: 0,
             week = dto.week ?: 0,
             subgroupNumber = dto.groupNumber ?: 0
         )
-        Log.d(TAG, "Lesson: $lesson")
 
-        return lesson
-    }
-
-    private fun getTeacherName(dto: LessonDto): String =
-        when (dto.activityType) {
-            1 -> formatName(dto.disciplineDto?.lectureTeacherDto?.name)
-            2 -> formatName(dto.disciplineDto?.labTeacherDto?.name)
-            3 -> formatName(dto.disciplineDto?.practiceTeacherDto?.name)
+    private fun getTeacherName(activityType: Int?, disciplineDto: DisciplineDto?) =
+        when (activityType) {
+            LECTURE -> formatName(disciplineDto?.lectureTeacherDto?.name)
+            LAB -> formatName(disciplineDto?.labTeacherDto?.name)
+            PRACTICE -> formatName(disciplineDto?.practiceTeacherDto?.name)
             else -> "No teacher"
+        }
+
+    private fun mapGroupsDtoToString(dtoList: List<GroupDto>?) =
+        dtoList?.map { group ->
+            group.name ?: "Unknown Group"
+        } ?: emptyList()
+
+    private fun getActivityTypeString(activityType: Int?) =
+        when (activityType) {
+            LECTURE -> "Лек."
+            LAB -> "Лаб."
+            PRACTICE -> "Пр."
+            else -> "Unknown"
         }
 
     private fun formatName(fullName: String?): String {
@@ -60,30 +59,10 @@ class LessonMapper @Inject constructor() {
         }
     }
 
-    private fun mapGroupsDtoToString(dtoList: List<GroupDto>?): List<String> {
-        return dtoList?.map { group ->
-            group.name ?: "Unknown Group"
-        } ?: emptyList()
-    }
-
-    private fun getPeriodTime(dto: LessonDto): TimeInterval {
-        return periodToTime[dto.period] ?: TimeInterval("00:00", "00:00")
-    }
-
-    private fun getActivityTypeString(dto: LessonDto): String? {
-        return when (dto.activityType) {
-            LECTURE -> "Лек."
-            LAB -> "Лаб."
-            PRACTICE -> "Пр."
-            else -> null
-        }
-    }
-
     companion object {
         private const val LECTURE = 1
         private const val LAB = 2
         private const val PRACTICE = 3
-
-        private const val TAG = "LessonMapper"
     }
+
 }
