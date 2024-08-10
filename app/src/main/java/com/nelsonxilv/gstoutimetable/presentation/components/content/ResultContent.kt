@@ -15,13 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.data.model.Lesson
-import com.nelsonxilv.gstoutimetable.data.model.TimeInterval
 import com.nelsonxilv.gstoutimetable.presentation.components.FilterChips
-import com.nelsonxilv.gstoutimetable.presentation.components.ScheduleTable
+import com.nelsonxilv.gstoutimetable.presentation.components.LessonItem
+import com.nelsonxilv.gstoutimetable.presentation.components.UniversalList
 import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableUiState
 
 private const val FirstSubgroup = 1
@@ -64,77 +61,16 @@ fun ResultContent(
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
 
-        ScheduleTable(
-            lessons = uiState.lessons,
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large))
-        )
+        UniversalList(
+            listElements = uiState.lessons,
+            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large)),
+            dynamicCorner = true
+        ) { lesson, shape ->
+            LessonItem(
+                lesson = lesson,
+                shape = shape,
+                modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_small))
+            )
+        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ResultScreenPreview() {
-    val fakeLesson1 = Lesson(
-        name = "Психология",
-        teacher = "Солдатский Л.В.",
-        auditorium = "ГУК 4-06",
-        groups = listOf("ИВТ-23-1э", "ИCТ-23-2э"),
-        timeInterval = TimeInterval("9:00", "10:20"),
-        activityType = "Лек.",
-        period = 1,
-        dayOfWeek = 1,
-        week = 0,
-        subgroupNumber = 1
-    )
-    val fakeLesson2 = Lesson(
-        name = "Английский язык",
-        teacher = "Катровский И.С.",
-        auditorium = "ГУК 4-06",
-        groups = listOf("ИВТ-23-1э"),
-        timeInterval = TimeInterval("10:30", "11:50"),
-        activityType = "Лек.",
-        period = 2,
-        dayOfWeek = 1,
-        week = 0,
-        subgroupNumber = 1
-    )
-    val fakeLesson3 = Lesson(
-        name = "История",
-        teacher = "Штефанов А.А.",
-        auditorium = "ГУК 4-06",
-        groups = listOf("ИВТ-23-1э"),
-        timeInterval = TimeInterval("13:00", "14:20"),
-        activityType = "Пр.",
-        period = 3,
-        dayOfWeek = 1,
-        week = 0,
-        subgroupNumber = 2
-    )
-    val fakeLesson4 = Lesson(
-        name = "Программирование",
-        teacher = "Эванс Н.Х.",
-        auditorium = "ГУК 4-06",
-        groups = listOf("ИВТ-23-1э"),
-        timeInterval = TimeInterval("14:30", "15:50"),
-        activityType = "Пр.",
-        period = 4,
-        dayOfWeek = 1,
-        week = 0,
-        subgroupNumber = 2
-    )
-
-    val list = listOf(fakeLesson1, fakeLesson2, fakeLesson3, fakeLesson4)
-
-    ResultContent(
-        uiState = TimetableUiState.Success(
-            "22 March, 2023",
-            list,
-            2,
-            1,
-            "ИВТ-23М"
-        ),
-        onFilterChipClick = {  },
-        modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(0.dp)
-    )
 }

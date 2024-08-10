@@ -16,18 +16,16 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.data.model.Lesson
-import com.nelsonxilv.gstoutimetable.data.model.TimeInterval
 import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
 
 private const val MaxLinesTitle = 2
 private const val MaxLinesText = 1
 
 @Composable
-fun ScheduleItem(
+fun LessonItem(
     lesson: Lesson,
     modifier: Modifier = Modifier,
     shape: Shape = DefaultShape
@@ -91,22 +89,4 @@ fun ScheduleItem(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun ScheduleItemPreview() {
-    val fakeLesson = Lesson(
-        name = "Психология",
-        teacher = "Солдатский Л.В.",
-        auditorium = "ГУК 4-06",
-        groups = listOf("ИВТ-23-1э", "ИCТ-23-2э"),
-        timeInterval = TimeInterval("9:00", "10:20"),
-        activityType = "Лек.",
-        period = 1,
-        dayOfWeek = 1,
-        week = 0,
-        subgroupNumber = 2
-    )
-    ScheduleItem(lesson = fakeLesson)
 }

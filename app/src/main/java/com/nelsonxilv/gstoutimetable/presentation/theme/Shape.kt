@@ -1,25 +1,23 @@
 package com.nelsonxilv.gstoutimetable.presentation.theme
 
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
 
 val FirstShape = RoundedCornerShape(
-    topStart = 16.dp,
-    topEnd = 16.dp,
-    bottomStart = 2.dp,
-    bottomEnd = 2.dp
+    topStart = 20.dp,
+    topEnd = 20.dp,
+    bottomStart = 4.dp,
+    bottomEnd = 4.dp
 )
 
 val LastShape = RoundedCornerShape(
-    topStart = 2.dp,
-    topEnd = 2.dp,
-    bottomStart = 16.dp,
-    bottomEnd = 16.dp
+    topStart = 4.dp,
+    topEnd = 4.dp,
+    bottomStart = 20.dp,
+    bottomEnd = 20.dp
 )
 
-val DefaultShape = RoundedCornerShape(
-    topStart = 2.dp,
-    topEnd = 2.dp,
-    bottomStart = 2.dp,
-    bottomEnd = 2.dp
-)
+val MediumShape = RoundedCornerShape(corner = CornerSize(4.dp))
+
+val DefaultShape = RoundedCornerShape(corner = CornerSize(20.dp))
