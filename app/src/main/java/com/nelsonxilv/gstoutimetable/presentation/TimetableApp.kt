@@ -4,8 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -28,11 +32,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nelsonxilv.gstoutimetable.R
+import com.nelsonxilv.gstoutimetable.data.model.Group
+import com.nelsonxilv.gstoutimetable.presentation.components.GroupItem
+import com.nelsonxilv.gstoutimetable.presentation.components.UniversalList
 import com.nelsonxilv.gstoutimetable.presentation.screen.HomeScreen
 import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableUiState
 import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableViewModel
@@ -42,6 +51,7 @@ import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableViewModel
 fun TimetableApp(timetableViewModel: TimetableViewModel = viewModel()) {
 
     val timetableUiState by timetableViewModel.timetableUiState.collectAsState()
+    val savedGroups by timetableViewModel.savedGroups.collectAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     var isSearchVisible by remember { mutableStateOf(false) }
@@ -61,9 +71,17 @@ fun TimetableApp(timetableViewModel: TimetableViewModel = viewModel()) {
                 exit = fadeOut()
             ) {
                 FullSearchBar(
-                    onQueryChange = { query -> timetableViewModel.getTodaySchedule(query) },
+                    savedGroups = savedGroups,
                     isSearchVisible = isSearchVisible,
-                    onActiveChanged = { isSearchVisible = it }
+                    onQueryChange = { query -> timetableViewModel.getTodayLessons(query) },
+                    onActiveChanged = { isSearchVisible = it },
+                    onGroupItemClick = { groupName ->
+                        timetableViewModel.getTodayLessons(groupName)
+                        isSearchVisible = false
+                    },
+                    onClearIconButtonCLick = { groupName ->
+                        timetableViewModel.deleteGroupAndLessons(groupName)
+                    }
                 )
             }
         }
@@ -87,9 +105,12 @@ fun TimetableApp(timetableViewModel: TimetableViewModel = viewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FullSearchBar(
-    onQueryChange: (String) -> Unit,
+    savedGroups: List<Group>,
     isSearchVisible: Boolean,
+    onQueryChange: (String) -> Unit,
     onActiveChanged: (Boolean) -> Unit,
+    onGroupItemClick: (String) -> Unit,
+    onClearIconButtonCLick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -110,8 +131,30 @@ fun FullSearchBar(
                 contentDescription = null
             )
         },
-        modifier = modifier.fillMaxWidth()
-    ) {  }
+        modifier = modifier.fillMaxWidth(),
+        colors = SearchBarDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            dividerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+        )
+    ) {
+        if (savedGroups.isNotEmpty()) {
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
+
+            UniversalList(
+                listElements = savedGroups,
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_large)),
+            ) { group, shape ->
+                GroupItem(
+                    group = group,
+                    onGroupItemClick = onGroupItemClick,
+                    onClearIconButtonCLick = onClearIconButtonCLick,
+                    shape = shape,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,7 +166,7 @@ fun TimetableAppBar(
     modifier: Modifier = Modifier
 ) {
 
-    val topAppBarText = if (timetableUiState is TimetableUiState.Success)  {
+    val topAppBarText = if (timetableUiState is TimetableUiState.Success) {
         timetableUiState.currentGroup
     } else {
         stringResource(id = R.string.app_name)

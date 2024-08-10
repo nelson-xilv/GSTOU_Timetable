@@ -16,8 +16,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL =
-        "https://backend-isu.gstou.ru/"
+    private const val BASE_URL = "https://backend-isu.gstou.ru/"
+    private const val CONTENT_TYPE = "application/json"
 
     @Provides
     @Singleton
@@ -34,7 +34,7 @@ object NetworkModule {
     fun provideTimetableApi(json: Json): TimetableApiService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(json.asConverterFactory(CONTENT_TYPE.toMediaType()))
             .build()
             .create(TimetableApiService::class.java)
     }

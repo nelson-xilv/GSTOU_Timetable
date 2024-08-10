@@ -44,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -62,7 +62,11 @@ dependencies {
     implementation(libs.kotlin.serialization.json)
     implementation(libs.okhttp3)
     implementation(libs.hilt.android)
+    implementation(libs.bundles.room)
+
     ksp(libs.hilt.compiler)
+    ksp(libs.room.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))

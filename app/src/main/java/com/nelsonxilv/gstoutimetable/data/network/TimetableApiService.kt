@@ -6,10 +6,11 @@ import retrofit2.http.Query
 
 interface TimetableApiService {
 
-    @GET("api/timetable/public/entrie/")
+    @GET(GET_TIMETABLE_VALUE)
     suspend fun getSchedule(@Query(QUERY_PARAM_GROUP) groupName: String): List<LessonDto>
 
     companion object {
+        private const val GET_TIMETABLE_VALUE = "api/timetable/public/entrie/"
         private const val QUERY_PARAM_GROUP = "group"
     }
 }
