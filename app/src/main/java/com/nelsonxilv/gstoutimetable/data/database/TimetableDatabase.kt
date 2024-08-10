@@ -15,5 +15,5 @@ import com.nelsonxilv.gstoutimetable.data.model.Lesson
 )
 @TypeConverters(ListConverter::class)
 abstract class TimetableDatabase : RoomDatabase() {
-    abstract fun lessonDao(): LessonDao
+    abstract fun lessonDao(): TimetableDao
 }

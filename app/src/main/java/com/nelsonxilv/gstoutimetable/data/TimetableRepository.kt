@@ -1,7 +1,7 @@
 package com.nelsonxilv.gstoutimetable.data
 
 import com.nelsonxilv.gstoutimetable.data.database.GroupWithLessons
-import com.nelsonxilv.gstoutimetable.data.database.LessonDao
+import com.nelsonxilv.gstoutimetable.data.database.TimetableDao
 import com.nelsonxilv.gstoutimetable.data.mapper.LessonMapper
 import com.nelsonxilv.gstoutimetable.data.model.Group
 import com.nelsonxilv.gstoutimetable.data.model.Lesson
@@ -14,12 +14,12 @@ import javax.inject.Inject
 
 class TimetableRepository @Inject constructor(
     private val apiService: TimetableApiService,
-    private val lessonDao: LessonDao,
+    private val timetableDao: TimetableDao,
     private val lessonMapper: LessonMapper
 ) {
 
     suspend fun getLessons(groupName: String): Flow<List<Lesson>> {
-        val localData = lessonDao.getLessonsByGroup(groupName)
+        val localData = timetableDao.getGroupWithLessons(groupName)
 
         return flow {
             if (localData == null) {
@@ -33,6 +33,12 @@ class TimetableRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun deleteGroupAndLessons(groupName: String) {
+        timetableDao.deleteGroupWithLessons(groupName)
+    }
+
+    fun getAllGroups(): Flow<List<Group>> = timetableDao.getAllGroups()
+
     private suspend fun getScheduleFromApi(groupName: String): List<Lesson> {
         val lessonDtoList = apiService.getSchedule(groupName)
         val lessonList = lessonDtoList.map { dto -> lessonMapper.mapDtoToModel(dto) }
@@ -44,7 +50,7 @@ class TimetableRepository @Inject constructor(
         val group = Group(groupName)
         val groupWithLessons = GroupWithLessons(group, lessons)
 
-        lessonDao.insertGroupWithLessons(groupWithLessons)
+        timetableDao.insertGroupWithLessons(groupWithLessons)
     }
 
 }

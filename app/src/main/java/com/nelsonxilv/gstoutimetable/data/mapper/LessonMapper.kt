@@ -10,20 +10,19 @@ class LessonMapper @Inject constructor(
     private val periodToTimeMapper: PeriodToTimeMapper
 ) {
 
-    fun mapDtoToModel(dto: LessonDto) =
-        Lesson(
-            lessonId = dto.id ?: 0,
-            name = dto.disciplineDto?.name ?: "No discipline",
-            teacher = getTeacherName(dto.activityType, dto.disciplineDto),
-            auditorium = dto.auditoriumDto?.name ?: "No room",
-            groupsNames = mapGroupsDtoToString(dto.groupsDto),
-            timeInterval = periodToTimeMapper.getPeriodTime(dto.period),
-            activityType = getActivityTypeString(dto.activityType),
-            period = dto.period,
-            dayOfWeek = dto.weekDay ?: 0,
-            week = dto.week ?: 0,
-            subgroupNumber = dto.groupNumber ?: 0
-        )
+    fun mapDtoToModel(dto: LessonDto) = Lesson(
+        lessonId = dto.id ?: 0,
+        name = dto.disciplineDto?.name ?: "No discipline",
+        teacher = getTeacherName(dto.activityType, dto.disciplineDto),
+        auditorium = dto.auditoriumDto?.name ?: "No room",
+        groupNames = mapGroupsDtoToString(dto.groupsDto),
+        timeInterval = periodToTimeMapper.getPeriodTime(dto.period),
+        activityType = getActivityTypeString(dto.activityType),
+        period = dto.period,
+        dayOfWeek = dto.weekDay ?: 0,
+        week = dto.week ?: 0,
+        subgroupNumber = dto.groupNumber ?: 0
+    )
 
     private fun getTeacherName(activityType: Int?, disciplineDto: DisciplineDto?) =
         when (activityType) {
@@ -33,18 +32,16 @@ class LessonMapper @Inject constructor(
             else -> "No teacher"
         }
 
-    private fun mapGroupsDtoToString(dtoList: List<GroupDto>?) =
-        dtoList?.map { group ->
-            group.name ?: "Unknown Group"
-        } ?: emptyList()
+    private fun mapGroupsDtoToString(dtoList: List<GroupDto>?) = dtoList?.map { group ->
+        group.name ?: "Unknown Group"
+    } ?: emptyList()
 
-    private fun getActivityTypeString(activityType: Int?) =
-        when (activityType) {
-            LECTURE -> "Лек."
-            LAB -> "Лаб."
-            PRACTICE -> "Пр."
-            else -> "Unknown"
-        }
+    private fun getActivityTypeString(activityType: Int?) = when (activityType) {
+        LECTURE -> "Лек."
+        LAB -> "Лаб."
+        PRACTICE -> "Пр."
+        else -> "Unknown"
+    }
 
     private fun formatName(fullName: String?): String {
         if (fullName == null) {

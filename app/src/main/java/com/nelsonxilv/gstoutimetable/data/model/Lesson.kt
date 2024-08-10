@@ -10,7 +10,7 @@ data class Lesson(
     val name: String,
     val teacher: String,
     val auditorium: String,
-    val groupsNames: List<String>,
+    val groupNames: List<String>,
     @Embedded val timeInterval: TimeInterval,
     val activityType: String,
     val period: Int,
