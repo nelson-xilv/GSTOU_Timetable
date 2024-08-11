@@ -5,9 +5,9 @@
     <string name="number_week">%1$s неделя</string>
     <string name="subgroup_number">%1$s</string>
     <string name="loading_please_wait">Загрузка, пожалуйста, подождите…</string>
-    <string name="loading_failed">Ошибка загрузки</string>
+    <string name="loading_failed">Ошибка загрузки данных.\nПожалуйста, повторите позже.</string>
     <string name="lesson_name_and_teacher_name">%1$s • %2$s</string>
     <string name="activity_type_and_auditorium">%1$s %2$s</string>
-    <string name="you_can_relax">Можно поспать ещё…</string>
+    <string name="you_can_relax">Сегодня пар нет. Можно поспать ещё…</string>
     <string name="hello_there">Введите название группы для поиска</string>
 </resources>

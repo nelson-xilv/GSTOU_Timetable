@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nelsonxilv.gstoutimetable.presentation.components.content.EmptyLessonsContent
-import com.nelsonxilv.gstoutimetable.presentation.components.content.ErrorContent
-import com.nelsonxilv.gstoutimetable.presentation.components.content.HelloContent
+import com.nelsonxilv.gstoutimetable.R
+import com.nelsonxilv.gstoutimetable.presentation.components.content.ContentContainer
 import com.nelsonxilv.gstoutimetable.presentation.components.content.LoadingContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ResultContent
 
@@ -44,9 +44,31 @@ fun HomeScreen(
             )
 
             is TimetableUiState.Loading -> LoadingContent(modifier.fillMaxSize())
-            is TimetableUiState.Error -> ErrorContent(modifier.fillMaxSize())
-            is TimetableUiState.EmptyTimetable -> EmptyLessonsContent(modifier.fillMaxSize())
-            is TimetableUiState.Hello -> HelloContent(modifier.fillMaxSize())
+            is TimetableUiState.Error -> ContentContainer(
+                iconRes = R.drawable.error_img,
+                textRes = R.string.loading_failed,
+                modifier = Modifier.fillMaxSize()
+            )
+            is TimetableUiState.EmptyTimetable -> ContentContainer(
+                iconRes = R.drawable.sleep_img,
+                textRes = R.string.you_can_relax,
+                modifier = Modifier.fillMaxSize()
+            )
+            is TimetableUiState.Hello -> ContentContainer(
+                iconRes = R.drawable.search_groups_img,
+                textRes = R.string.hello_there,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+fun PreviewHomeScreen() {
+    ContentContainer(
+        iconRes = R.drawable.error_img,
+        textRes = R.string.loading_failed,
+        modifier = Modifier.fillMaxSize()
+    )
 }
