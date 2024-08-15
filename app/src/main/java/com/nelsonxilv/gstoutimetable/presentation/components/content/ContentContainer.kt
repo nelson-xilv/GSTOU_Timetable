@@ -31,7 +31,7 @@ fun ContentContainer(
     ) {
         Card {
             Column(
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
