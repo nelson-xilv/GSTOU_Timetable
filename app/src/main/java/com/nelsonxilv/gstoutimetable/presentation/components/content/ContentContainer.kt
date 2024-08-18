@@ -21,30 +21,27 @@ import com.nelsonxilv.gstoutimetable.R
 fun ContentContainer(
     @DrawableRes iconRes: Int,
     @StringRes textRes: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickCard: () -> Unit = {}
 ) {
-
-    Column(
+    Card(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        onClick = onClickCard
     ) {
-        Card {
-            Column(
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = null
-                )
-                Text(
-                    text = stringResource(id = textRes),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-                )
-            }
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(id = textRes),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
+            )
         }
     }
 }

@@ -5,16 +5,19 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ContentContainer
 import com.nelsonxilv.gstoutimetable.presentation.components.content.LoadingContent
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ResultContent
+import com.nelsonxilv.gstoutimetable.utils.iconResId
+import com.nelsonxilv.gstoutimetable.utils.textResId
 
 private const val DurationMillis = 400
 
@@ -23,6 +26,7 @@ fun HomeScreen(
     timetableUiState: TimetableUiState,
     modifier: Modifier = Modifier,
     onFilterChipClick: (Int) -> Unit,
+    onClickCard: () -> Unit,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     AnimatedContent(
@@ -34,41 +38,27 @@ fun HomeScreen(
         },
         label = "Animated Content"
     ) { targetState ->
-        when (targetState) {
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when (targetState) {
 
-            is TimetableUiState.Success -> ResultContent(
-                uiState = targetState,
-                onFilterChipClick = onFilterChipClick,
-                modifier = modifier.fillMaxSize(),
-                contentPadding = contentPadding
-            )
+                is TimetableUiState.Success -> ResultContent(
+                    uiState = targetState,
+                    onFilterChipClick = onFilterChipClick,
+                    modifier = modifier.fillMaxSize(),
+                    contentPadding = contentPadding
+                )
 
-            is TimetableUiState.Loading -> LoadingContent(modifier.fillMaxSize())
-            is TimetableUiState.Error -> ContentContainer(
-                iconRes = R.drawable.error_img,
-                textRes = R.string.loading_failed,
-                modifier = Modifier.fillMaxSize()
-            )
-            is TimetableUiState.EmptyTimetable -> ContentContainer(
-                iconRes = R.drawable.sleep_img,
-                textRes = R.string.you_can_relax,
-                modifier = Modifier.fillMaxSize()
-            )
-            is TimetableUiState.Hello -> ContentContainer(
-                iconRes = R.drawable.search_groups_img,
-                textRes = R.string.hello_there,
-                modifier = Modifier.fillMaxSize()
-            )
+                is TimetableUiState.Loading -> LoadingContent(modifier.fillMaxSize())
+                else -> ContentContainer(
+                    iconRes = targetState.iconResId,
+                    textRes = targetState.textResId,
+                    onClickCard = { if (targetState is TimetableUiState.Hello) onClickCard() }
+                )
+            }
         }
     }
-}
-
-@Preview(showBackground = true, locale = "ru")
-@Composable
-fun PreviewHomeScreen() {
-    ContentContainer(
-        iconRes = R.drawable.error_img,
-        textRes = R.string.loading_failed,
-        modifier = Modifier.fillMaxSize()
-    )
 }
