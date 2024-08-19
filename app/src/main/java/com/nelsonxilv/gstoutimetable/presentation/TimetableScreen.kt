@@ -30,7 +30,7 @@ import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimetableApp(timetableViewModel: TimetableViewModel = viewModel()) {
+fun TimetableScreen(timetableViewModel: TimetableViewModel = viewModel()) {
 
     val timetableUiState by timetableViewModel.timetableUiState.collectAsState()
     val savedGroups by timetableViewModel.savedGroups.collectAsState()

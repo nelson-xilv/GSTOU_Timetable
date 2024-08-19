@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.nelsonxilv.gstoutimetable.presentation.TimetableApp
+import com.nelsonxilv.gstoutimetable.presentation.TimetableScreen
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    TimetableApp()
+                    TimetableScreen()
                 }
             }
         }
@@ -34,6 +34,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     GSTOUTimetableTheme {
-        TimetableApp()
+        TimetableScreen()
     }
 }
