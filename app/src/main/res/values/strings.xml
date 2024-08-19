@@ -5,8 +5,6 @@
     <string name="subgroup_number">%1$s</string>
     <string name="loading_please_wait">Loading, please wait…</string>
     <string name="loading_failed">An error occurred while loading the data.\nPlease try again later.</string>
-    <string name="lesson_name_and_teacher_name">%1$s • %2$s</string>
-    <string name="activity_type_and_auditorium">%1$s %2$s</string>
     <string name="you_can_relax">There are no lessons today.\nYou can relax…</string>
     <string name="hello_there">Enter your group name to search</string>
 </resources>
