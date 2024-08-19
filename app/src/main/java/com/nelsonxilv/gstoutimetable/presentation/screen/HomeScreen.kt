@@ -56,7 +56,7 @@ fun HomeScreen(
                 else -> ContentContainer(
                     iconRes = targetState.iconResId,
                     textRes = targetState.textResId,
-                    onClickCard = { if (targetState is TimetableUiState.Hello) onClickCard() }
+                    onClickCard = { if (targetState is TimetableUiState.Greeting) onClickCard() }
                 )
             }
         }

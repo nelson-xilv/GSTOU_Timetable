@@ -15,5 +15,5 @@ sealed interface TimetableUiState {
     data object Error : TimetableUiState
     data object Loading : TimetableUiState
     data object EmptyTimetable : TimetableUiState
-    data object Hello : TimetableUiState
+    data object Greeting : TimetableUiState
 }
