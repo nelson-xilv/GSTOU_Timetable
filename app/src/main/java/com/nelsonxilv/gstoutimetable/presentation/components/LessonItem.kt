@@ -14,8 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.data.model.Lesson
@@ -49,11 +52,7 @@ fun LessonItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = stringResource(
-                        R.string.lesson_name_and_teacher_name,
-                        lesson.name,
-                        lesson.teacher
-                    ),
+                    text = lesson.name,
                     style = MaterialTheme.typography.labelLarge,
                     maxLines = MaxLinesTitle,
                     overflow = TextOverflow.Ellipsis
@@ -62,11 +61,12 @@ fun LessonItem(
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = stringResource(
-                        R.string.activity_type_and_auditorium,
-                        lesson.activityType,
-                        lesson.auditorium
-                    ),
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                            append(lesson.activityType)
+                        }
+                        append(" ${lesson.auditorium}, ${lesson.teacher}")
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = MaxLinesText,
                     overflow = TextOverflow.Ellipsis

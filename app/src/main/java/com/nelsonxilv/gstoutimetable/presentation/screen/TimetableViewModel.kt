@@ -31,7 +31,7 @@ class TimetableViewModel @Inject constructor(
         _timetableUiState.value = TimetableUiState.Error
     }
 
-    private val _timetableUiState = MutableStateFlow<TimetableUiState>(TimetableUiState.Hello)
+    private val _timetableUiState = MutableStateFlow<TimetableUiState>(TimetableUiState.Greeting)
     val timetableUiState: StateFlow<TimetableUiState>
         get() = _timetableUiState.asStateFlow()
 
