@@ -24,7 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.data.model.Group
+import com.nelsonxilv.gstoutimetable.domain.entity.Group
 import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableUiState
 
 @OptIn(ExperimentalMaterial3Api::class)

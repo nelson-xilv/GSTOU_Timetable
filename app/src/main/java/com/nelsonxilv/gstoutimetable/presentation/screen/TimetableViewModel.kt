@@ -3,9 +3,11 @@ package com.nelsonxilv.gstoutimetable.presentation.screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nelsonxilv.gstoutimetable.data.TimetableRepository
-import com.nelsonxilv.gstoutimetable.data.model.Group
-import com.nelsonxilv.gstoutimetable.data.model.Lesson
+import com.nelsonxilv.gstoutimetable.domain.entity.Group
+import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
+import com.nelsonxilv.gstoutimetable.domain.usecase.DeleteGroupAndLessonsUseCase
+import com.nelsonxilv.gstoutimetable.domain.usecase.GetGroupListUseCase
+import com.nelsonxilv.gstoutimetable.domain.usecase.GetLessonListUseCase
 import com.nelsonxilv.gstoutimetable.utils.getCurrentDate
 import com.nelsonxilv.gstoutimetable.utils.getCurrentWeekNumber
 import com.nelsonxilv.gstoutimetable.utils.getDayOfWeekNumber
@@ -23,7 +25,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
-    private val repository: TimetableRepository
+    private val getLessonListUseCase: GetLessonListUseCase,
+    private val deleteGroupAndLessonsUseCase: DeleteGroupAndLessonsUseCase,
+    private val getGroupListUseCase: GetGroupListUseCase
 ) : ViewModel() {
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
@@ -52,7 +56,7 @@ class TimetableViewModel @Inject constructor(
 
         viewModelScope.launch(coroutineExceptionHandler) {
             _timetableUiState.value = TimetableUiState.Loading
-            repository.getLessons(correctGroupName)
+            getLessonListUseCase(correctGroupName)
                 .flowOn(Dispatchers.IO)
                 .map { lessons ->
                     val filteredLessons = lessons.filterLessons(
@@ -85,13 +89,13 @@ class TimetableViewModel @Inject constructor(
 
     fun deleteGroupAndLessons(groupName: String) {
         viewModelScope.launch {
-            repository.deleteGroupAndLessons(groupName)
+            deleteGroupAndLessonsUseCase(groupName)
         }
     }
 
     private fun loadInitData() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            repository.getAllGroups().collect { groups ->
+            getGroupListUseCase().collect { groups ->
                 _savedGroups.value = groups.reversed()
             }
         }

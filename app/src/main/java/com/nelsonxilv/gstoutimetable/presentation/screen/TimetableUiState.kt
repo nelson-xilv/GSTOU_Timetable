@@ -1,6 +1,6 @@
 package com.nelsonxilv.gstoutimetable.presentation.screen
 
-import com.nelsonxilv.gstoutimetable.data.model.Lesson
+import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 
 sealed interface TimetableUiState {
 
