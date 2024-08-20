@@ -6,25 +6,25 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.nelsonxilv.gstoutimetable.data.model.Group
-import com.nelsonxilv.gstoutimetable.data.model.Lesson
+import com.nelsonxilv.gstoutimetable.data.model.GroupDbModel
+import com.nelsonxilv.gstoutimetable.data.model.LessonDbModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TimetableDao {
 
     @Query("SELECT * FROM groups")
-    fun getAllGroups(): Flow<List<Group>>
+    fun getAllGroups(): Flow<List<GroupDbModel>>
 
     @Transaction
     @Query("SELECT * FROM groups WHERE groupName = :groupName")
     suspend fun getGroupWithLessons(groupName: String): GroupWithLessons?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLesson(lesson: Lesson)
+    suspend fun insertLesson(lesson: LessonDbModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroup(group: Group)
+    suspend fun insertGroup(group: GroupDbModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGroupLessonCrossRef(crossRef: GroupLessonCrossRef)
@@ -37,17 +37,20 @@ interface TimetableDao {
         groupWithLessons.lessons.forEach { lesson ->
             insertLesson(lesson)
 
-            val crossRef = GroupLessonCrossRef(groupWithLessons.group.groupName, lesson.lessonId)
+            val crossRef = GroupLessonCrossRef(
+                groupWithLessons.group.groupName,
+                lesson.lessonId
+            )
             insertGroupLessonCrossRef(crossRef)
         }
 
     }
 
     @Query("SELECT * FROM lesson_group_cross_ref WHERE lessonId = :lessonId")
-    suspend fun getGroupsForLesson(lessonId: Int): List<Group>
+    suspend fun getGroupsForLesson(lessonId: Int): List<GroupDbModel>
 
     @Delete
-    suspend fun deleteLessons(lessonIds: List<Lesson>)
+    suspend fun deleteLessons(lessonIds: List<LessonDbModel>)
 
     @Query("DELETE FROM groups WHERE groupName = :groupName")
     suspend fun deleteGroup(groupName: String)

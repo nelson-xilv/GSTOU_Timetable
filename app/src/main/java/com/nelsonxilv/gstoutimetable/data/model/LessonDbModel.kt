@@ -3,9 +3,10 @@ package com.nelsonxilv.gstoutimetable.data.model
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.nelsonxilv.gstoutimetable.domain.entity.TimeInterval
 
 @Entity(tableName = "lessons")
-data class Lesson(
+data class LessonDbModel(
     @PrimaryKey val lessonId: Int,
     val name: String,
     val teacher: String,

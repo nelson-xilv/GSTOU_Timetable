@@ -1,6 +1,6 @@
-package com.nelsonxilv.gstoutimetable.data.mapper
+package com.nelsonxilv.gstoutimetable.data.mapper.mappers
 
-import com.nelsonxilv.gstoutimetable.data.model.TimeInterval
+import com.nelsonxilv.gstoutimetable.domain.entity.TimeInterval
 import javax.inject.Inject
 
 class PeriodToTimeMapper @Inject constructor() {
