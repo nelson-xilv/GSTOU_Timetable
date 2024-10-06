@@ -1,27 +1,27 @@
-package com.nelsonxilv.gstoutimetable.data.mapper
+package com.nelsonxilv.gstoutimetable.data.mapper.mappers
 
-import com.nelsonxilv.gstoutimetable.data.model.Lesson
+import com.nelsonxilv.gstoutimetable.data.model.LessonDbModel
 import com.nelsonxilv.gstoutimetable.data.network.model.DisciplineDto
 import com.nelsonxilv.gstoutimetable.data.network.model.GroupDto
 import com.nelsonxilv.gstoutimetable.data.network.model.LessonDto
 import javax.inject.Inject
 
-class LessonMapper @Inject constructor(
+class LessonDtoMapper @Inject constructor(
     private val periodToTimeMapper: PeriodToTimeMapper
-) {
+) : Mapper<LessonDto, LessonDbModel> {
 
-    fun mapDtoToModel(dto: LessonDto) = Lesson(
-        lessonId = dto.id ?: 0,
-        name = dto.disciplineDto?.name ?: "No discipline",
-        teacher = getTeacherName(dto.activityType, dto.disciplineDto),
-        auditorium = dto.auditoriumDto?.name ?: "No room",
-        groupNames = mapGroupsDtoToString(dto.groupsDto),
-        timeInterval = periodToTimeMapper.getPeriodTime(dto.period),
-        activityType = getActivityTypeString(dto.activityType),
-        period = dto.period,
-        dayOfWeek = dto.weekDay ?: 0,
-        week = dto.week ?: 0,
-        subgroupNumber = dto.groupNumber ?: 0
+    override fun transform(data: LessonDto) = LessonDbModel(
+        lessonId = data.id ?: 0,
+        name = data.disciplineDto?.name ?: "No discipline",
+        teacher = getTeacherName(data.activityType, data.disciplineDto),
+        auditorium = data.auditoriumDto?.name ?: "No room",
+        groupNames = mapGroupsDtoToString(data.groupsDto),
+        timeInterval = periodToTimeMapper.getPeriodTime(data.period),
+        activityType = getActivityTypeString(data.activityType),
+        period = data.period,
+        dayOfWeek = data.weekDay ?: 0,
+        week = data.week ?: 0,
+        subgroupNumber = data.groupNumber ?: 0
     )
 
     private fun getTeacherName(activityType: Int?, disciplineDto: DisciplineDto?) =

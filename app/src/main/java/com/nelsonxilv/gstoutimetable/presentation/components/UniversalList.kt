@@ -10,7 +10,6 @@ import com.nelsonxilv.gstoutimetable.presentation.theme.FirstShape
 import com.nelsonxilv.gstoutimetable.presentation.theme.LastShape
 import com.nelsonxilv.gstoutimetable.presentation.theme.MediumShape
 
-
 @Composable
 fun <T> UniversalList(
     listElements: List<T>,

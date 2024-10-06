@@ -3,13 +3,14 @@ package com.nelsonxilv.gstoutimetable.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.nelsonxilv.gstoutimetable.data.model.Group
-import com.nelsonxilv.gstoutimetable.data.model.Lesson
+import com.nelsonxilv.gstoutimetable.data.model.GroupDbModel
+import com.nelsonxilv.gstoutimetable.data.model.LessonDbModel
 
 @Database(
     entities = [
-        Lesson::class,
-        GroupLessonCrossRef::class, Group::class
+        LessonDbModel::class,
+        GroupLessonCrossRef::class,
+        GroupDbModel::class
     ],
     version = 1
 )

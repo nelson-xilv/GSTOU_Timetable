@@ -14,8 +14,8 @@ android {
         applicationId = "com.nelsonxilv.gstoutimetable"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.2"
+        versionCode = 2
+        versionName = "0.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -33,12 +33,21 @@ android {
             )
         }
     }
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val outputFileName = "GSTOU_Timetable-${variant.baseName}-${variant.versionName}.apk"
+                output.outputFileName = outputFileName
+            }
+    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "21"
     }
     buildFeatures {
         compose = true

@@ -24,28 +24,21 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.data.model.Group
-import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableUiState
+import com.nelsonxilv.gstoutimetable.domain.entity.Group
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimetableAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
-    timetableUiState: TimetableUiState,
+    titleAppBar: String,
     modifier: Modifier = Modifier
 ) {
-
-    val topAppBarText = if (timetableUiState is TimetableUiState.Success) {
-        timetableUiState.currentGroup
-    } else {
-        stringResource(id = R.string.app_name)
-    }
 
     TopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
             Text(
-                text = topAppBarText,
+                text = titleAppBar,
                 style = MaterialTheme.typography.headlineSmall,
             )
         },

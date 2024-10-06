@@ -19,7 +19,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.data.model.Group
+import com.nelsonxilv.gstoutimetable.domain.entity.Group
 import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
 
 @Composable

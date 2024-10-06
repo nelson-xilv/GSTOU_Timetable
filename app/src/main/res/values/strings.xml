@@ -7,4 +7,5 @@
     <string name="loading_failed">An error occurred while loading the data.\nPlease try again later.</string>
     <string name="you_can_relax">There are no lessons today.\nYou can relax…</string>
     <string name="hello_there">Enter your group name to search</string>
+    <string name="text_copied">Text copied</string>
 </resources>

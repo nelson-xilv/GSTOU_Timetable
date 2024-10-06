@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable.data.model
+package com.nelsonxilv.gstoutimetable.domain.entity
 
 data class TimeInterval(
     val start: String,
