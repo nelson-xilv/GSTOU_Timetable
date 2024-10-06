@@ -1,4 +1,4 @@
-package com.nelsonxilv.gstoutimetable.presentation
+package com.nelsonxilv.gstoutimetable.presentation.screens.main
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -22,20 +22,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.presentation.components.FullSearchBar
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableAppBar
-import com.nelsonxilv.gstoutimetable.presentation.screen.HomeScreen
-import com.nelsonxilv.gstoutimetable.presentation.screen.TimetableViewModel
+import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent
+import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiState
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.TimetableOfDayScreen
+
+@Composable
+fun TimetableApp() {
+    val viewModel = viewModel<TimetableViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+
+    TimetableContent(
+        state = uiState,
+        onEvent = viewModel::handleEvent
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimetableScreen(timetableViewModel: TimetableViewModel = viewModel()) {
-
-    val timetableUiState by timetableViewModel.timetableUiState.collectAsState()
-    val savedGroups by timetableViewModel.savedGroups.collectAsState()
+private fun TimetableContent(
+    state: TimetableUiState = TimetableUiState(),
+    onEvent: (TimetableUiEvent) -> Unit = {}
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
+    var searchGroupName by remember { mutableStateOf("") }
     var isSearchVisible by remember { mutableStateOf(false) }
 
     BackHandler(enabled = isSearchVisible) {
@@ -47,7 +61,7 @@ fun TimetableScreen(timetableViewModel: TimetableViewModel = viewModel()) {
         topBar = {
             TimetableAppBar(
                 scrollBehavior = scrollBehavior,
-                timetableUiState = timetableUiState
+                titleAppBar = state.currentGroupName ?: stringResource(id = R.string.app_name)
             )
 
             AnimatedVisibility(
@@ -56,16 +70,20 @@ fun TimetableScreen(timetableViewModel: TimetableViewModel = viewModel()) {
                 exit = fadeOut()
             ) {
                 FullSearchBar(
-                    savedGroups = savedGroups,
+                    savedGroups = state.savedGroupList,
                     isSearchVisible = isSearchVisible,
-                    onQueryChange = { query -> timetableViewModel.getTodayLessons(query) },
+                    onQueryChange = { groupName ->
+                        searchGroupName = groupName
+                        onEvent(TimetableUiEvent.OnGroupSearchClick(groupName))
+                    },
                     onActiveChanged = { isSearchVisible = it },
                     onGroupItemClick = { groupName ->
-                        timetableViewModel.getTodayLessons(groupName)
+                        searchGroupName = groupName
                         isSearchVisible = false
+                        onEvent(TimetableUiEvent.OnGroupSearchClick(groupName))
                     },
                     onClearIconButtonCLick = { groupName ->
-                        timetableViewModel.deleteGroupAndLessons(groupName)
+                        onEvent(TimetableUiEvent.OnDeleteGroupClick(groupName))
                     }
                 )
             }
@@ -84,18 +102,13 @@ fun TimetableScreen(timetableViewModel: TimetableViewModel = viewModel()) {
                 }
             }
         }
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            HomeScreen(
-                timetableUiState = timetableUiState,
-                contentPadding = it,
-                onFilterChipClick = { subgroupNumber ->
-                    timetableViewModel.updateSelectedSubgroup(subgroupNumber)
-                },
-                onClickCard = { isSearchVisible = true },
-                modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Surface(modifier = Modifier.fillMaxSize()) {
+            TimetableOfDayScreen(
+                searchGroupName = searchGroupName,
+                dateInfo = state.dateInfo,
+                contentPadding = innerPadding,
+                onCardClick = { isSearchVisible = true },
             )
         }
     }

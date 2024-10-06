@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.data.model.Lesson
+import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
 
 private const val MaxLinesTitle = 2

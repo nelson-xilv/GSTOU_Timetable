@@ -6,10 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.nelsonxilv.gstoutimetable.presentation.TimetableScreen
+import com.nelsonxilv.gstoutimetable.presentation.screens.main.TimetableApp
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,20 +18,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GSTOUTimetableTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    TimetableScreen()
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    TimetableApp()
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GSTOUTimetableTheme {
-        TimetableScreen()
     }
 }
