@@ -80,7 +80,7 @@ private fun TimetableOfDayContent(
             .padding(contentPadding)
     ) {
         TimetableInfoBar(
-            showFilterChips = showFilterChips(uiState),
+            showFilterChips = uiState.showFilterChips,
             selectedSubgroupNumber = uiState.selectedSubgroupNumber,
             date = dateInfo.currentFormattedDate,
             weekNumber = dateInfo.currentWeekNumber,
@@ -154,9 +154,6 @@ private fun TimetableOfDayContent(
         }
     }
 }
-
-private fun showFilterChips(lessonsUiState: LessonsUiState) =
-    lessonsUiState.isEmptyLessonList || lessonsUiState.lessons.isNotEmpty()
 
 @Preview(showBackground = true)
 @Composable

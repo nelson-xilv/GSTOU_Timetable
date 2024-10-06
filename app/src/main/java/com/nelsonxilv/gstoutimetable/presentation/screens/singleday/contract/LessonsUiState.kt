@@ -21,6 +21,9 @@ data class LessonsUiState(
     val isInitialState: Boolean
         get() = lessons.isEmpty() && currentGroup.isBlank()
 
+    val showFilterChips: Boolean
+        get() = isEmptyLessonList || lessons.isNotEmpty()
+
     @DrawableRes
     val loadingLessonsErrorImageId: Int = R.drawable.error_img
 
