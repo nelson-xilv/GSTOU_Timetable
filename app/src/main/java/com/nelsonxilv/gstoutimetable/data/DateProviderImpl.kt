@@ -36,7 +36,7 @@ class DateProviderImpl @Inject constructor() : DateProvider {
         val daysDifference = date.toEpochDay() - september16th.toEpochDay()
         val weekNumber = (daysDifference / 7) + 1
 
-        return if (weekNumber % 2 == 0L) FIRST_WEEK else SECOND_WEEK
+        return if (weekNumber % 2 == 0L) SECOND_WEEK else FIRST_WEEK
     }
 
     companion object {
