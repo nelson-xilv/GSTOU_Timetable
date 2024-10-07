@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class PracticeTeacherDto(
+data class PracticeTeacherDto(
     val id: Int?,
     val name: String?,
     @SerialName("user_id")
