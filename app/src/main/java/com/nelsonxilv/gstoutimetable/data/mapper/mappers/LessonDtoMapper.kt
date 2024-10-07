@@ -14,7 +14,7 @@ class LessonDtoMapper @Inject constructor(
         lessonId = data.id ?: 0,
         name = data.disciplineDto?.name ?: "No discipline",
         teacher = getTeacherName(data.activityType, data.disciplineDto),
-        auditorium = data.auditoriumDto?.name ?: "No room",
+        auditorium = getAuditoriumName(data.auditoriumDto?.name),
         groupNames = mapGroupsDtoToString(data.groupsDto),
         timeInterval = periodToTimeMapper.getPeriodTime(data.period),
         activityType = getActivityTypeString(data.activityType),
@@ -23,6 +23,14 @@ class LessonDtoMapper @Inject constructor(
         week = data.week ?: 0,
         subgroupNumber = data.groupNumber ?: 0
     )
+
+    private fun getAuditoriumName(name: String?): String {
+        if (name.isNullOrEmpty() || name.isBlank()) {
+            return "No room"
+        }
+
+        return name
+    }
 
     private fun getTeacherName(activityType: Int?, disciplineDto: DisciplineDto?) =
         when (activityType) {
@@ -44,11 +52,11 @@ class LessonDtoMapper @Inject constructor(
     }
 
     private fun formatName(fullName: String?): String {
-        if (fullName == null) {
+        if (fullName.isNullOrBlank()) {
             return "No teacher"
         }
 
-        val parts = fullName.split(" ")
+        val parts = fullName.trim().split(" ").filter { it.isNotEmpty() }
         return if (parts.size > 1) {
             parts[0] + " " + parts.drop(1).joinToString(" ") { "${it[0]}." }
         } else {
