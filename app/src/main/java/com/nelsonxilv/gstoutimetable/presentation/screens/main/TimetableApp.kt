@@ -17,6 +17,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -25,6 +26,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nelsonxilv.gstoutimetable.R
+import com.nelsonxilv.gstoutimetable.presentation.components.TimetableNavigationBar
 import com.nelsonxilv.gstoutimetable.presentation.components.FullSearchBar
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableAppBar
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent
@@ -100,6 +102,22 @@ private fun TimetableContent(
                 ) {
                     Icon(imageVector = Icons.Default.Search, contentDescription = null)
                 }
+            }
+        },
+        bottomBar = {
+            AnimatedVisibility(
+                visible = !isSearchVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                var selectedItem by remember { mutableIntStateOf(0) }
+                val items = listOf("Сегодня", "Завтра", "Неделя")
+
+                TimetableNavigationBar(
+                    items = items,
+                    selectedItem = selectedItem,
+                    onItemClick = { selectedItem = it }
+                )
             }
         }
     ) { innerPadding ->
