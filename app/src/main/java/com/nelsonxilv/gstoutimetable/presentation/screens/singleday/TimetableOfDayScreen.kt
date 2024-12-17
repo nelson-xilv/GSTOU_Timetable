@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.domain.entity.DateInfo
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableInfoBar
@@ -37,7 +37,7 @@ fun TimetableOfDayScreen(
     contentPadding: PaddingValues,
     onCardClick: () -> Unit,
 ) {
-    val viewModel = viewModel<TimetableOfDayViewModel>()
+    val viewModel = hiltViewModel<TimetableOfDayViewModel>()
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
@@ -112,7 +112,6 @@ private fun TimetableOfDayContent(
                         iconRes = targetState.greetingImageId,
                         textRes = targetState.greetingMessageId,
                         onCardClick = onCardClick,
-                        onCopied = onCopied,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -126,7 +125,6 @@ private fun TimetableOfDayContent(
                         iconRes = targetState.emptyLessonListImageId,
                         textRes = targetState.emptyLessonListMessageId,
                         onCardClick = onCardClick,
-                        onCopied = onCopied,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
