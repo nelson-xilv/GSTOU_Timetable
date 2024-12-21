@@ -79,6 +79,8 @@ private fun TimetableOfDayContent(
             .fillMaxSize()
             .padding(contentPadding)
     ) {
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
+
         TimetableInfoBar(
             showFilterChips = uiState.showFilterChips,
             selectedSubgroupNumber = uiState.selectedSubgroupNumber,

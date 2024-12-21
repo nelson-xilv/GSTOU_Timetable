@@ -33,19 +33,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.nelsonxilv.gstoutimetable.presentation.navigation.NavigationItem
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 
 @Composable
 fun TimetableNavigationBar(
-    items: List<String>,
-    selectedItem: Int = 0,
-    onItemClick: (Int) -> Unit,
+    itemsListSize: Int,
+    selectedItemIndex: Int = 0,
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = NavigationBarDefaults.windowInsets
+    windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
+    content: @Composable RowScope.() -> Unit
 ) {
     BoxWithConstraints(
         modifier = modifier
@@ -57,9 +59,9 @@ fun TimetableNavigationBar(
             .background(MaterialTheme.colorScheme.surfaceContainer)
             .padding(4.dp),
     ) {
-        val width = maxWidth / items.size
+        val width = maxWidth / itemsListSize
         val offset by animateDpAsState(
-            targetValue = width * selectedItem,
+            targetValue = width * selectedItemIndex,
             label = "Offset"
         )
 
@@ -77,16 +79,9 @@ fun TimetableNavigationBar(
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            items.forEachIndexed { index, item ->
-                TimetableNavBarItem(
-                    text = item,
-                    selected = selectedItem == index,
-                    onClick = { onItemClick(index) }
-                )
-            }
-        }
+            verticalAlignment = Alignment.CenterVertically,
+            content = content
+        )
     }
 }
 
@@ -121,6 +116,40 @@ fun RowScope.TimetableNavBarItem(
     }
 }
 
+/* Preview code */
+
+@Composable
+private fun TimetableNavigationBarForPreview() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .background(Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        var selectedItem by remember { mutableIntStateOf(0) }
+        val items = listOf(
+            NavigationItem.Today,
+            NavigationItem.Tomorrow,
+        )
+
+        TimetableNavigationBar(
+            itemsListSize = items.size,
+            selectedItemIndex = selectedItem
+        ) {
+            items.forEachIndexed { index, item ->
+                TimetableNavBarItem(
+                    text = stringResource(item.titleResId),
+                    selected = selectedItem == index,
+                    onClick = {
+                        selectedItem = index
+                    }
+                )
+            }
+        }
+    }
+}
+
 @Preview(
     name = "light_mode",
     uiMode = UI_MODE_NIGHT_NO,
@@ -129,48 +158,18 @@ fun RowScope.TimetableNavBarItem(
 @Composable
 private fun AnimatedTimetableNavigationBarPreview() {
     GSTOUTimetableTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            var selectedItem by remember { mutableIntStateOf(0) }
-            val items = listOf("Сегодня", "Завтра", "Неделя")
-
-            TimetableNavigationBar(
-                items = items,
-                selectedItem = selectedItem,
-                onItemClick = { selectedItem = it }
-            )
-        }
+        TimetableNavigationBarForPreview()
     }
 }
 
 @Preview(
     name = "night_mode",
     uiMode = UI_MODE_NIGHT_YES,
-    showBackground = true,
+    showBackground = true
 )
 @Composable
 private fun AnimatedTimetableNavigationBarNightPreview() {
     GSTOUTimetableTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            var selectedItem by remember { mutableIntStateOf(0) }
-            val items = listOf("Сегодня", "Завтра", "Неделя")
-
-            TimetableNavigationBar(
-                items = items,
-                selectedItem = selectedItem,
-                onItemClick = { selectedItem = it }
-            )
-        }
+        TimetableNavigationBarForPreview()
     }
 }
