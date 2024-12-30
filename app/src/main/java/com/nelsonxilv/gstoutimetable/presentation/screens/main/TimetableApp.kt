@@ -16,24 +16,33 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.nelsonxilv.gstoutimetable.R
+import com.nelsonxilv.gstoutimetable.domain.DateType
 import com.nelsonxilv.gstoutimetable.presentation.components.FullSearchBar
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableAppBar
+import com.nelsonxilv.gstoutimetable.presentation.components.TimetableNavBarItem
+import com.nelsonxilv.gstoutimetable.presentation.components.TimetableNavigationBar
+import com.nelsonxilv.gstoutimetable.presentation.navigation.AppNavGraph
+import com.nelsonxilv.gstoutimetable.presentation.navigation.NavigationItem
+import com.nelsonxilv.gstoutimetable.presentation.navigation.isCurrentScreen
+import com.nelsonxilv.gstoutimetable.presentation.navigation.rememberNavigationState
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiState
 import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.TimetableOfDayScreen
 
 @Composable
 fun TimetableApp() {
-    val viewModel = viewModel<TimetableViewModel>()
+    val viewModel = hiltViewModel<TimetableViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
     TimetableContent(
@@ -49,8 +58,9 @@ private fun TimetableContent(
     onEvent: (TimetableUiEvent) -> Unit = {}
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    var searchGroupName by remember { mutableStateOf("") }
-    var isSearchVisible by remember { mutableStateOf(false) }
+    var searchGroupName by rememberSaveable { mutableStateOf("") }
+    var isSearchVisible by rememberSaveable { mutableStateOf(false) }
+    val navigationState = rememberNavigationState()
 
     BackHandler(enabled = isSearchVisible) {
         isSearchVisible = false
@@ -82,7 +92,7 @@ private fun TimetableContent(
                         isSearchVisible = false
                         onEvent(TimetableUiEvent.OnGroupSearchClick(groupName))
                     },
-                    onClearIconButtonCLick = { groupName ->
+                    onClearIconButtonClick = { groupName ->
                         onEvent(TimetableUiEvent.OnDeleteGroupClick(groupName))
                     }
                 )
@@ -101,14 +111,66 @@ private fun TimetableContent(
                     Icon(imageVector = Icons.Default.Search, contentDescription = null)
                 }
             }
+        },
+        bottomBar = {
+            AnimatedVisibility(
+                visible = !isSearchVisible && state.currentGroupName != null,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                val items = listOf(
+                    NavigationItem.Today,
+                    NavigationItem.Tomorrow,
+                )
+                val navBackStackEntry by navigationState
+                    .navHostController
+                    .currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+
+                val selectedItem = rememberSaveable(currentDestination) {
+                    derivedStateOf {
+                        items.indexOfFirst { screen ->
+                            currentDestination?.isCurrentScreen(screen) == true
+                        }.coerceAtLeast(0)
+                    }.value
+                }
+
+                TimetableNavigationBar(
+                    itemsListSize = items.size,
+                    selectedItemIndex = selectedItem
+                ) {
+                    items.forEach { screen ->
+                        val isSelected = currentDestination?.isCurrentScreen(screen) == true
+
+                        TimetableNavBarItem(
+                            text = stringResource(screen.titleResId),
+                            selected = isSelected,
+                            onClick = { navigationState.navigateTo(screen) }
+                        )
+                    }
+                }
+            }
         }
     ) { innerPadding ->
         Surface(modifier = Modifier.fillMaxSize()) {
-            TimetableOfDayScreen(
-                searchGroupName = searchGroupName,
-                dateInfo = state.dateInfo,
-                contentPadding = innerPadding,
-                onCardClick = { isSearchVisible = true },
+            AppNavGraph(
+                navHostController = navigationState.navHostController,
+                todayScreenContent = {
+                    TimetableOfDayScreen(
+                        searchGroupName = searchGroupName,
+                        dateType = DateType.TODAY,
+                        contentPadding = innerPadding,
+                        onCardClick = { isSearchVisible = true },
+                    )
+                },
+                tomorrowScreenContent = {
+                    TimetableOfDayScreen(
+                        searchGroupName = searchGroupName,
+                        dateType = DateType.TOMORROW,
+                        contentPadding = innerPadding,
+                        onCardClick = { isSearchVisible = true },
+                    )
+                },
             )
         }
     }
