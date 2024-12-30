@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.domain.entity.DateInfo
+import com.nelsonxilv.gstoutimetable.domain.DateType
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableInfoBar
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ContentContainer
 import com.nelsonxilv.gstoutimetable.presentation.components.content.LoadingContent
@@ -33,18 +33,20 @@ import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 @Composable
 fun TimetableOfDayScreen(
     searchGroupName: String,
-    dateInfo: DateInfo,
+    dateType: DateType,
     contentPadding: PaddingValues,
     onCardClick: () -> Unit,
 ) {
-    val viewModel = hiltViewModel<TimetableOfDayViewModel>()
+    val viewModel =
+        hiltViewModel<TimetableOfDayViewModel, TimetableOfDayViewModel.Factory>(
+            creationCallback = { factory -> factory.create(dateType) }
+        )
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     TimetableOfDayContent(
         uiState = uiState,
         searchGroupName = searchGroupName,
-        dateInfo = dateInfo,
         onEvent = viewModel::handleEvent,
         contentPadding = contentPadding,
         onCardClick = onCardClick,
@@ -62,8 +64,7 @@ fun TimetableOfDayScreen(
 private fun TimetableOfDayContent(
     uiState: LessonsUiState = LessonsUiState(),
     searchGroupName: String = "",
-    dateInfo: DateInfo = DateInfo(),
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(),
     onEvent: (LessonsUiEvent) -> Unit = {},
     onCardClick: () -> Unit = {},
     onCopied: () -> Unit = {},
@@ -84,8 +85,8 @@ private fun TimetableOfDayContent(
         TimetableInfoBar(
             showFilterChips = uiState.showFilterChips,
             selectedSubgroupNumber = uiState.selectedSubgroupNumber,
-            date = dateInfo.currentFormattedDate,
-            weekNumber = dateInfo.currentWeekNumber,
+            date = uiState.dateInfo.currentFormattedDate,
+            weekNumber = uiState.dateInfo.currentWeekNumber,
             onFilterChipClick = { groupNum ->
                 onEvent(LessonsUiEvent.OnSubgroupChipClick(groupNum))
             }

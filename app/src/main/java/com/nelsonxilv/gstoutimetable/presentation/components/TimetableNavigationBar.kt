@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -93,6 +94,9 @@ fun RowScope.TimetableNavBarItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val density = LocalDensity.current
+    val textSize = with(density) { 16.dp.toSp() }
+
     Box(
         modifier = modifier
             .weight(weight = 1f)
@@ -110,6 +114,7 @@ fun RowScope.TimetableNavBarItem(
     ) {
         Text(
             text = text,
+            fontSize = textSize,
             color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer
             else MaterialTheme.colorScheme.onSurfaceVariant
         )
