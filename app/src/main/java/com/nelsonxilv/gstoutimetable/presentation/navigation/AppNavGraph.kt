@@ -16,6 +16,7 @@ fun AppNavGraph(
     navHostController: NavHostController,
     todayScreenContent: @Composable () -> Unit,
     tomorrowScreenContent: @Composable () -> Unit,
+    weekScreenContent: @Composable () -> Unit,
 ) {
     NavHost(
         navController = navHostController,
@@ -34,6 +35,13 @@ fun AppNavGraph(
             exitTransition = { getExitTransition(this) },
         ) {
             tomorrowScreenContent()
+        }
+
+        composable<Screen.WeekScreen>(
+            enterTransition = ::slideInToLeft,
+            exitTransition = ::slideOutToRight,
+        ) {
+            weekScreenContent()
         }
 
     }
