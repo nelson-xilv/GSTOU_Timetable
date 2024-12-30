@@ -4,10 +4,8 @@
     <string name="number_week">%1$s week</string>
     <string name="subgroup_number">%1$s</string>
     <string name="loading_please_wait">Loading, please wait…</string>
-    <string name="loading_failed">The upload of data has failed.\nPlease try again later.</string>
+    <string name="loading_failed">An error occurred while loading the data.\nPlease try again later.</string>
     <string name="you_can_relax">There are no lessons today.\nYou can relax…</string>
     <string name="hello_there">Enter your group name to search</string>
     <string name="text_copied">Text copied</string>
-    <string name="today">Today</string>
-    <string name="tomorrow">Tomorrow</string>
 </resources>

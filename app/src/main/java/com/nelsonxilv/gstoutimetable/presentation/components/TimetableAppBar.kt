@@ -54,41 +54,32 @@ fun FullSearchBar(
     onQueryChange: (String) -> Unit,
     onActiveChanged: (Boolean) -> Unit,
     onGroupItemClick: (String) -> Unit,
-    onClearIconButtonClick: (String) -> Unit,
+    onClearIconButtonCLick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
 
-    val onActiveChange: (Boolean) -> Unit = { active -> onActiveChanged(active) }
-    val colors = SearchBarDefaults.colors(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-        dividerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-    )
-
     SearchBar(
-        inputField = {
-            SearchBarDefaults.InputField(
-                query = searchText,
-                onQueryChange = { query -> searchText = query },
-                onSearch = { query ->
-                    onQueryChange(query)
-                    onActiveChanged(false)
-                },
-                expanded = isSearchVisible,
-                onExpandedChange = onActiveChange,
-                placeholder = { Text(text = stringResource(R.string.search_by_group)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null
-                    )
-                }
+        query = searchText,
+        onQueryChange = { query -> searchText = query },
+        onSearch = { query ->
+            onQueryChange(query)
+            onActiveChanged(false)
+        },
+        active = isSearchVisible,
+        onActiveChange = { active -> onActiveChanged(active) },
+        placeholder = { Text(text = stringResource(R.string.search_by_group)) },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null
             )
         },
-        expanded = isSearchVisible,
-        onExpandedChange = onActiveChange,
         modifier = modifier.fillMaxWidth(),
-        colors = colors
+        colors = SearchBarDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            dividerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+        )
     ) {
         if (savedGroups.isNotEmpty()) {
 
@@ -101,7 +92,7 @@ fun FullSearchBar(
                 GroupItem(
                     group = group,
                     onGroupItemClick = onGroupItemClick,
-                    onClearIconButtonCLick = onClearIconButtonClick,
+                    onClearIconButtonCLick = onClearIconButtonCLick,
                     shape = shape,
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
