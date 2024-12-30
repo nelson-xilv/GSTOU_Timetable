@@ -19,9 +19,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.domain.DateType
+import com.nelsonxilv.gstoutimetable.domain.entity.DateInfo
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableInfoBar
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ContentContainer
 import com.nelsonxilv.gstoutimetable.presentation.components.content.LoadingContent
@@ -33,20 +33,18 @@ import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 @Composable
 fun TimetableOfDayScreen(
     searchGroupName: String,
-    dateType: DateType,
+    dateInfo: DateInfo,
     contentPadding: PaddingValues,
     onCardClick: () -> Unit,
 ) {
-    val viewModel =
-        hiltViewModel<TimetableOfDayViewModel, TimetableOfDayViewModel.Factory>(
-            creationCallback = { factory -> factory.create(dateType) }
-        )
+    val viewModel = viewModel<TimetableOfDayViewModel>()
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     TimetableOfDayContent(
         uiState = uiState,
         searchGroupName = searchGroupName,
+        dateInfo = dateInfo,
         onEvent = viewModel::handleEvent,
         contentPadding = contentPadding,
         onCardClick = onCardClick,
@@ -64,7 +62,8 @@ fun TimetableOfDayScreen(
 private fun TimetableOfDayContent(
     uiState: LessonsUiState = LessonsUiState(),
     searchGroupName: String = "",
-    contentPadding: PaddingValues = PaddingValues(),
+    dateInfo: DateInfo = DateInfo(),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     onEvent: (LessonsUiEvent) -> Unit = {},
     onCardClick: () -> Unit = {},
     onCopied: () -> Unit = {},
@@ -80,13 +79,11 @@ private fun TimetableOfDayContent(
             .fillMaxSize()
             .padding(contentPadding)
     ) {
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
-
         TimetableInfoBar(
             showFilterChips = uiState.showFilterChips,
             selectedSubgroupNumber = uiState.selectedSubgroupNumber,
-            date = uiState.dateInfo.currentFormattedDate,
-            weekNumber = uiState.dateInfo.currentWeekNumber,
+            date = dateInfo.currentFormattedDate,
+            weekNumber = dateInfo.currentWeekNumber,
             onFilterChipClick = { groupNum ->
                 onEvent(LessonsUiEvent.OnSubgroupChipClick(groupNum))
             }
@@ -115,6 +112,7 @@ private fun TimetableOfDayContent(
                         iconRes = targetState.greetingImageId,
                         textRes = targetState.greetingMessageId,
                         onCardClick = onCardClick,
+                        onCopied = onCopied,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -128,6 +126,7 @@ private fun TimetableOfDayContent(
                         iconRes = targetState.emptyLessonListImageId,
                         textRes = targetState.emptyLessonListMessageId,
                         onCardClick = onCardClick,
+                        onCopied = onCopied,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }

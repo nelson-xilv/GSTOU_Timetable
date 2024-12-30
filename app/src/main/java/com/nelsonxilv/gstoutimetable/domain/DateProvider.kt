@@ -1,11 +1,13 @@
 package com.nelsonxilv.gstoutimetable.domain
 
+import java.time.LocalDate
+
 interface DateProvider {
 
-    fun getDayOfWeekNumber(dateType: DateType): Int
+    fun getDayOfWeekNumber(): Int
 
-    fun getFormattedDate(dateType: DateType): String
+    fun getCurrentFormattedDate(): String
 
-    fun getWeekNumber(dateType: DateType): Int
+    fun getCurrentWeekNumber(date: LocalDate = LocalDate.now()): Int
 
 }

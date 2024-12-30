@@ -3,16 +3,12 @@ package com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.domain.DateType
-import com.nelsonxilv.gstoutimetable.domain.entity.DateInfo
 import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.presentation.core.contract.UiState
 
 data class LessonsUiState(
     val lessons: List<Lesson> = listOf(),
     val selectedSubgroupNumber: Int = DEFAULT_SUBGROUP_NUM,
-    val dateType: DateType = DateType.TODAY,
-    val dateInfo: DateInfo = DateInfo(),
     val currentGroup: String = "",
     val isLoading: Boolean = false,
     val isLoadingLessonsError: Boolean = false,
