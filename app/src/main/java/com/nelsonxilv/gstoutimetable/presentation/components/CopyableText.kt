@@ -14,6 +14,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import com.nelsonxilv.gstoutimetable.R
+import com.nelsonxilv.gstoutimetable.utils.customMarquee
+
+private const val CopyableTextMaxLines = 1
 
 @Composable
 fun CopyableText(
@@ -27,6 +30,7 @@ fun CopyableText(
         text = text,
         textAlign = TextAlign.Center,
         color = MaterialTheme.colorScheme.onSecondary,
+        maxLines = CopyableTextMaxLines,
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -40,5 +44,6 @@ fun CopyableText(
                 clipboardManager.setText(AnnotatedString(text))
                 onCopied()
             }
+            .customMarquee()
     )
 }
