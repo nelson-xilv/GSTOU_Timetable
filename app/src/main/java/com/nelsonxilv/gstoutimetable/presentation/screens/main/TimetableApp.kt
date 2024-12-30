@@ -39,6 +39,7 @@ import com.nelsonxilv.gstoutimetable.presentation.navigation.rememberNavigationS
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiState
 import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.TimetableOfDayScreen
+import com.nelsonxilv.gstoutimetable.presentation.screens.week.WeekScreen
 
 @Composable
 fun TimetableApp() {
@@ -121,6 +122,7 @@ private fun TimetableContent(
                 val items = listOf(
                     NavigationItem.Today,
                     NavigationItem.Tomorrow,
+                    NavigationItem.Week
                 )
                 val navBackStackEntry by navigationState
                     .navHostController
@@ -171,6 +173,7 @@ private fun TimetableContent(
                         onCardClick = { isSearchVisible = true },
                     )
                 },
+                weekScreenContent = { WeekScreen(contentPadding = innerPadding) }
             )
         }
     }

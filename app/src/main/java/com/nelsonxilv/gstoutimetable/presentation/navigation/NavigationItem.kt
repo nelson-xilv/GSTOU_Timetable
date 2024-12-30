@@ -25,6 +25,12 @@ sealed class NavigationItem<T : Any>(
         titleResId = R.string.tomorrow
     )
 
+    @Serializable
+    data object Week : NavigationItem<Screen.WeekScreen>(
+        route = Screen.WeekScreen,
+        titleResId = R.string.week
+    )
+
 }
 
 fun NavDestination?.isCurrentScreen(screen: NavigationItem<*>) =

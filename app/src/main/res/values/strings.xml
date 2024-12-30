@@ -10,4 +10,9 @@
     <string name="text_copied">Text copied</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="week">Week</string>
+    <string name="soon">Soon.</string>
+    <string name="app_update_info_message">In order not to miss updates and keep up to date with all the news related to the application, you can subscribe to the Telegram channel or follow the project on GitHub.</string>
+    <string name="telegram" translatable="false">Telegram</string>
+    <string name="github" translatable="false">GitHub</string>
 </resources>

@@ -11,4 +11,7 @@ sealed interface Screen {
     @Serializable
     data object TomorrowScreen : Screen
 
+    @Serializable
+    data object WeekScreen : Screen
+
 }
