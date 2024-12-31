@@ -4,6 +4,7 @@ import com.nelsonxilv.gstoutimetable.data.model.LessonDbModel
 import com.nelsonxilv.gstoutimetable.data.network.model.DisciplineDto
 import com.nelsonxilv.gstoutimetable.data.network.model.GroupDto
 import com.nelsonxilv.gstoutimetable.data.network.model.LessonDto
+import com.nelsonxilv.gstoutimetable.domain.entity.TimeInterval
 import javax.inject.Inject
 
 class LessonDtoMapper @Inject constructor(
@@ -16,21 +17,13 @@ class LessonDtoMapper @Inject constructor(
         teacher = getTeacherName(data.activityType, data.disciplineDto),
         auditorium = getAuditoriumName(data.auditoriumDto?.name),
         groupNames = mapGroupsDtoToString(data.groupsDto),
-        timeInterval = periodToTimeMapper.getPeriodTime(data.period),
+        timeInterval = checkInstituteNameForPeriodTime(data.period, data.groupsDto),
         activityType = getActivityTypeString(data.activityType),
         period = data.period,
         dayOfWeek = data.weekDay ?: 0,
         week = data.week ?: 0,
         subgroupNumber = data.groupNumber ?: 0
     )
-
-    private fun getAuditoriumName(name: String?): String {
-        if (name.isNullOrEmpty() || name.isBlank()) {
-            return "No room"
-        }
-
-        return name
-    }
 
     private fun getTeacherName(activityType: Int?, disciplineDto: DisciplineDto?) =
         when (activityType) {
@@ -40,9 +33,28 @@ class LessonDtoMapper @Inject constructor(
             else -> "No teacher"
         }
 
+    private fun getAuditoriumName(name: String?): String {
+        if (name.isNullOrEmpty() || name.isBlank()) {
+            return "No room"
+        }
+
+        return name
+    }
+
     private fun mapGroupsDtoToString(dtoList: List<GroupDto>?) = dtoList?.map { group ->
         group.name ?: "Unknown Group"
     } ?: emptyList()
+
+    private fun checkInstituteNameForPeriodTime(
+        period: Int,
+        listGroups: List<GroupDto>?
+    ): TimeInterval {
+        val isFSPO = listGroups?.all { group ->
+            group.instituteDto?.name == FSPO
+        } ?: false
+
+        return periodToTimeMapper.getPeriodTime(period, isFSPO)
+    }
 
     private fun getActivityTypeString(activityType: Int?) = when (activityType) {
         LECTURE -> "Лек."
@@ -68,6 +80,7 @@ class LessonDtoMapper @Inject constructor(
         private const val LECTURE = 1
         private const val LAB = 2
         private const val PRACTICE = 3
+        private const val FSPO = "ФСПО"
     }
 
 }
