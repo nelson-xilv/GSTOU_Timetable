@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -47,7 +48,7 @@ fun TimetableApp() {
     val uiState by viewModel.uiState.collectAsState()
 
     TimetableContent(
-        state = uiState,
+        uiState = uiState,
         onEvent = viewModel::handleEvent
     )
 }
@@ -55,13 +56,17 @@ fun TimetableApp() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimetableContent(
-    state: TimetableUiState = TimetableUiState(),
+    uiState: TimetableUiState = TimetableUiState(),
     onEvent: (TimetableUiEvent) -> Unit = {}
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var searchGroupName by rememberSaveable { mutableStateOf("") }
     var isSearchVisible by rememberSaveable { mutableStateOf(false) }
     val navigationState = rememberNavigationState()
+
+    LaunchedEffect(Unit) {
+        onEvent(TimetableUiEvent.OnDataUpdate)
+    }
 
     BackHandler(enabled = isSearchVisible) {
         isSearchVisible = false
@@ -72,7 +77,9 @@ private fun TimetableContent(
         topBar = {
             TimetableAppBar(
                 scrollBehavior = scrollBehavior,
-                titleAppBar = state.currentGroupName ?: stringResource(id = R.string.app_name)
+                titleAppBar = uiState.currentGroupName ?: stringResource(id = R.string.app_name),
+                isDataUpdating = uiState.isDataUpdating,
+                onUpdateButtonClick = { onEvent(TimetableUiEvent.OnDataUpdate) }
             )
 
             AnimatedVisibility(
@@ -81,7 +88,7 @@ private fun TimetableContent(
                 exit = fadeOut()
             ) {
                 FullSearchBar(
-                    savedGroups = state.savedGroupList,
+                    savedGroups = uiState.savedGroupList,
                     isSearchVisible = isSearchVisible,
                     onQueryChange = { groupName ->
                         searchGroupName = groupName
@@ -115,7 +122,7 @@ private fun TimetableContent(
         },
         bottomBar = {
             AnimatedVisibility(
-                visible = !isSearchVisible && state.currentGroupName != null,
+                visible = !isSearchVisible && uiState.currentGroupName != null,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
