@@ -6,4 +6,5 @@ import com.nelsonxilv.gstoutimetable.presentation.core.contract.UiState
 data class TimetableUiState(
     val currentGroupName: String? = null,
     val savedGroupList: List<Group> = emptyList(),
+    val isDataUpdating: Boolean = false,
 ) : UiState
