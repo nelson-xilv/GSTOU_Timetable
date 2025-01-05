@@ -10,6 +10,7 @@ import com.nelsonxilv.gstoutimetable.presentation.core.contract.UiState
 
 data class LessonsUiState(
     val lessons: List<Lesson> = listOf(),
+    val filteredLessons: List<Lesson> = listOf(),
     val selectedSubgroupNumber: Int = DEFAULT_SUBGROUP_NUM,
     val dateType: DateType = DateType.TODAY,
     val dateInfo: DateInfo = DateInfo(),
@@ -26,7 +27,7 @@ data class LessonsUiState(
         get() = lessons.isEmpty() && currentGroup.isBlank()
 
     val showFilterChips: Boolean
-        get() = isEmptyLessonList || lessons.isNotEmpty()
+        get() = lessons.isNotEmpty() && lessons.any { it.subgroupNumber != 0 }
 
     @DrawableRes
     val loadingLessonsErrorImageId: Int = R.drawable.error_img

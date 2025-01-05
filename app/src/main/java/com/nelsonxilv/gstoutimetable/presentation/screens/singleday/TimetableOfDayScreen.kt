@@ -32,7 +32,7 @@ import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 
 @Composable
 fun TimetableOfDayScreen(
-    searchGroupName: String,
+    searchGroupName: String?,
     dateType: DateType,
     contentPadding: PaddingValues,
     onCardClick: () -> Unit,
@@ -46,7 +46,7 @@ fun TimetableOfDayScreen(
 
     TimetableOfDayContent(
         uiState = uiState,
-        searchGroupName = searchGroupName,
+        searchGroupName = searchGroupName ?: "",
         onEvent = viewModel::handleEvent,
         contentPadding = contentPadding,
         onCardClick = onCardClick,
@@ -147,8 +147,8 @@ private fun TimetableOfDayContent(
                     )
                 }
 
-                targetState.lessons.isNotEmpty() -> ResultContent(
-                    lessons = targetState.lessons,
+                targetState.filteredLessons.isNotEmpty() -> ResultContent(
+                    lessons = targetState.filteredLessons,
                     modifier = Modifier.fillMaxSize()
                 )
             }

@@ -14,35 +14,30 @@ class GetLessonListForDayUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         groupName: String,
-        subgroupNumber: Int,
         dateType: DateType
     ): Flow<List<Lesson>> {
         val dayOfWeek = dateProvider.getDayOfWeekNumber(dateType)
         val weekNumber = dateProvider.getWeekNumber(dateType)
 
         return timetableRepository.getLessonList(groupName).map { lessons ->
-            lessons.filterLessons(subgroupNumber, dayOfWeek, weekNumber)
+            lessons.filterLessons(dayOfWeek, weekNumber)
         }
     }
 
     private fun List<Lesson>.filterLessons(
-        selectedSubgroupNumber: Int,
         dayOfWeek: Int? = null,
         weekNumber: Int? = null
     ): List<Lesson> {
         return this.filter { lesson ->
             (dayOfWeek == null || lesson.dayOfWeek == dayOfWeek) &&
                     (weekNumber == null || lesson.week == weekNumber
-                            || lesson.week == NO_WEEK) &&
-                    (lesson.subgroupNumber == NO_SUBGROUP
-                            || lesson.subgroupNumber == selectedSubgroupNumber)
+                            || lesson.week == NO_WEEK)
         }.sortedBy { lesson ->
             lesson.period
         }
     }
 
     companion object {
-        private const val NO_SUBGROUP = 0
         private const val NO_WEEK = 0
     }
 }

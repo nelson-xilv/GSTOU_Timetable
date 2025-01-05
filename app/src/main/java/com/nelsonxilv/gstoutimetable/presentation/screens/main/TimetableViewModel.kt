@@ -50,6 +50,8 @@ class TimetableViewModel @Inject constructor(
     private fun deleteGroupAndLessons(groupName: String) {
         viewModelScope.launch(coroutineExceptionHandler) {
             deleteGroupAndLessonsUseCase(groupName)
+            if (currentState.currentGroupName == groupName)
+                setState(currentState.copy(currentGroupName = null))
         }
     }
 

@@ -102,6 +102,9 @@ private fun TimetableContent(
                     },
                     onClearIconButtonClick = { groupName ->
                         onEvent(TimetableUiEvent.OnDeleteGroupClick(groupName))
+                        if (groupName == uiState.currentGroupName) {
+                            navigationState.navigateTo(NavigationItem.Today)
+                        }
                     }
                 )
             }
@@ -166,7 +169,7 @@ private fun TimetableContent(
                 navHostController = navigationState.navHostController,
                 todayScreenContent = {
                     TimetableOfDayScreen(
-                        searchGroupName = searchGroupName,
+                        searchGroupName = uiState.currentGroupName,
                         dateType = DateType.TODAY,
                         contentPadding = innerPadding,
                         onCardClick = { isSearchVisible = true },
@@ -174,7 +177,7 @@ private fun TimetableContent(
                 },
                 tomorrowScreenContent = {
                     TimetableOfDayScreen(
-                        searchGroupName = searchGroupName,
+                        searchGroupName = uiState.currentGroupName,
                         dateType = DateType.TOMORROW,
                         contentPadding = innerPadding,
                         onCardClick = { isSearchVisible = true },

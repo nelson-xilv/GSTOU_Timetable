@@ -3,6 +3,7 @@ package com.nelsonxilv.gstoutimetable.presentation.screens.singleday
 import androidx.lifecycle.viewModelScope
 import com.nelsonxilv.gstoutimetable.di.DefaultCoroutineExceptionHandler
 import com.nelsonxilv.gstoutimetable.domain.DateType
+import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetDateUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetLessonListForDayUseCase
 import com.nelsonxilv.gstoutimetable.presentation.core.viewmodel.BaseViewModel
@@ -49,13 +50,21 @@ class TimetableOfDayViewModel @AssistedInject constructor(
             val correctGroupName = formatGroupName(groupName)
             setState(currentState.copy(currentGroup = correctGroupName, dateType = dateType))
             loadLessonsForGroup()
+        } else {
+            setState(currentState.copy(currentGroup = groupName))
+            getDateInfo()
         }
     }
 
     private fun updateSelectedSubgroup(number: Int) {
         if (number != currentState.selectedSubgroupNumber) {
-            setState(currentState.copy(selectedSubgroupNumber = number))
-            loadLessonsForGroup()
+            val filteredLessons = filterLessonsBySubgroup(currentState.lessons, number)
+            setState(
+                currentState.copy(
+                    selectedSubgroupNumber = number,
+                    filteredLessons = filteredLessons
+                )
+            )
         }
     }
 
@@ -77,7 +86,6 @@ class TimetableOfDayViewModel @AssistedInject constructor(
         viewModelScope.launch(coroutineExceptionHandler) {
             getLessonListForDayUseCase(
                 currentState.currentGroup,
-                currentState.selectedSubgroupNumber,
                 currentState.dateType,
             ).catch { exception ->
                 setState(
@@ -88,9 +96,26 @@ class TimetableOfDayViewModel @AssistedInject constructor(
                     )
                 )
             }.collect { lessons ->
-                setState(currentState.copy(lessons = lessons, isLoading = false))
+                val filteredLessons =
+                    filterLessonsBySubgroup(lessons, currentState.selectedSubgroupNumber)
+
+                setState(
+                    currentState.copy(
+                        lessons = lessons,
+                        filteredLessons = filteredLessons,
+                        isLoading = false
+                    )
+                )
             }
         }
 
     }
+
+    private fun filterLessonsBySubgroup(
+        lessons: List<Lesson>,
+        subgroupNumber: Int
+    ) = lessons.filter { lesson ->
+        lesson.subgroupNumber == 0 || lesson.subgroupNumber == subgroupNumber
+    }
+
 }
