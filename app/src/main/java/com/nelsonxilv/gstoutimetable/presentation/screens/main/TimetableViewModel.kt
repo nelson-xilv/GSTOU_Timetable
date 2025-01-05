@@ -3,7 +3,6 @@ package com.nelsonxilv.gstoutimetable.presentation.screens.main
 import androidx.lifecycle.viewModelScope
 import com.nelsonxilv.gstoutimetable.di.DefaultCoroutineExceptionHandler
 import com.nelsonxilv.gstoutimetable.domain.usecase.DeleteGroupAndLessonsUseCase
-import com.nelsonxilv.gstoutimetable.domain.usecase.GetDateUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetGroupListUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.UpdateDataUseCase
 import com.nelsonxilv.gstoutimetable.presentation.core.viewmodel.BaseViewModel
@@ -21,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
     private val getGroupListUseCase: GetGroupListUseCase,
-    private val getDateUseCase: GetDateUseCase,
     private val deleteGroupAndLessonsUseCase: DeleteGroupAndLessonsUseCase,
     private val updateDataUseCase: UpdateDataUseCase,
     @DefaultCoroutineExceptionHandler
@@ -29,7 +27,7 @@ class TimetableViewModel @Inject constructor(
 ) : BaseViewModel<TimetableUiState, TimetableUiEvent>(TimetableUiState()) {
 
     init {
-        loadInitData()
+        getGroupList()
     }
 
     override fun handleEvent(event: TimetableUiEvent) {
@@ -63,16 +61,6 @@ class TimetableViewModel @Inject constructor(
             updateDataUseCase()
             setState(currentState.copy(isDataUpdating = false))
         }
-    }
-
-    private fun loadInitData() {
-        getInfo()
-        getGroupList()
-    }
-
-    private fun getInfo() {
-        val dateInfo = getDateUseCase()
-        setState(currentState.copy(dateInfo = dateInfo))
     }
 
     private fun getGroupList() {

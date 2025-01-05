@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_small">2dp</dimen>
+    <dimen name="padding_small_medium">4dp</dimen>
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="corner_radius">12dp</dimen>
     <dimen name="padding_large">16dp</dimen>
