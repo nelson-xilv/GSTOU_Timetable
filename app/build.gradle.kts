@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.nelsonxilv.gstoutimetable"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.nelsonxilv.gstoutimetable"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 2
-        versionName = "0.2.1"
+        targetSdk = 35
+        versionCode = 3
+        versionName = "0.5.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

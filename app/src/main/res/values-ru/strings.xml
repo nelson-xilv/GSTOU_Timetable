@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ГГНТУ Расписание</string>
+    <string name="app_name">Расписание</string>
+    <string name="full_app_name">ГГНТУ Расписание</string>
     <string name="search_by_group">Поиск по группе…</string>
     <string name="number_week">%1$s неделя</string>
     <string name="subgroup_number">%1$s</string>
