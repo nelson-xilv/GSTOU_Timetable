@@ -5,8 +5,10 @@ import com.nelsonxilv.gstoutimetable.di.DefaultCoroutineExceptionHandler
 import com.nelsonxilv.gstoutimetable.domain.usecase.DeleteGroupAndLessonsUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetDateUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetGroupListUseCase
+import com.nelsonxilv.gstoutimetable.domain.usecase.UpdateDataUseCase
 import com.nelsonxilv.gstoutimetable.presentation.core.viewmodel.BaseViewModel
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent
+import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent.OnDataUpdate
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent.OnDeleteGroupClick
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent.OnGroupSearchClick
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiState
@@ -21,6 +23,7 @@ class TimetableViewModel @Inject constructor(
     private val getGroupListUseCase: GetGroupListUseCase,
     private val getDateUseCase: GetDateUseCase,
     private val deleteGroupAndLessonsUseCase: DeleteGroupAndLessonsUseCase,
+    private val updateDataUseCase: UpdateDataUseCase,
     @DefaultCoroutineExceptionHandler
     private val coroutineExceptionHandler: CoroutineExceptionHandler,
 ) : BaseViewModel<TimetableUiState, TimetableUiEvent>(TimetableUiState()) {
@@ -33,6 +36,7 @@ class TimetableViewModel @Inject constructor(
         when (event) {
             is OnGroupSearchClick -> setGroupNameInTopBar(event.groupName)
             is OnDeleteGroupClick -> deleteGroupAndLessons(event.groupName)
+            is OnDataUpdate -> updateData()
         }
     }
 
@@ -48,6 +52,16 @@ class TimetableViewModel @Inject constructor(
     private fun deleteGroupAndLessons(groupName: String) {
         viewModelScope.launch(coroutineExceptionHandler) {
             deleteGroupAndLessonsUseCase(groupName)
+            if (currentState.currentGroupName == groupName)
+                setState(currentState.copy(currentGroupName = null))
+        }
+    }
+
+    private fun updateData() {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            setState(currentState.copy(isDataUpdating = true))
+            updateDataUseCase()
+            setState(currentState.copy(isDataUpdating = false))
         }
     }
 

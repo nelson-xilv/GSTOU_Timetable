@@ -2,6 +2,8 @@
 <resources>
     <dimen name="padding_small">2dp</dimen>
     <dimen name="padding_medium">8dp</dimen>
-    <dimen name="padding_large">16dp</dimen>
     <dimen name="corner_radius">12dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_max">18dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
 </resources>

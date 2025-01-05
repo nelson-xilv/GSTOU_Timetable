@@ -11,4 +11,7 @@ interface TimetableRepository {
     suspend fun deleteGroupAndLessons(groupName: String)
 
     fun getGroupList(): Flow<List<Group>>
+
+    suspend fun updateData()
+
 }

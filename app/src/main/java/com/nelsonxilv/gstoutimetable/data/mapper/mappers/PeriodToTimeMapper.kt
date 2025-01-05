@@ -16,7 +16,20 @@ class PeriodToTimeMapper @Inject constructor() {
         8 to TimeInterval("20:30", "21:50")
     )
 
-    fun getPeriodTime(period: Int): TimeInterval {
-        return periodToTime[period] ?: TimeInterval("00:00", "00:00")
+    private val periodToTimeForFSPO = mapOf(
+        1 to TimeInterval("9:00", "10:00"),
+        2 to TimeInterval("10:10", "11:10"),
+        3 to TimeInterval("11:20", "12:20"),
+        4 to TimeInterval("13:00", "14:00"),
+        5 to TimeInterval("14:10", "15:10"),
+        6 to TimeInterval("15:20", "16:20")
+    )
+
+    fun getPeriodTime(period: Int, isFSPO: Boolean): TimeInterval {
+        return if (isFSPO) {
+            periodToTimeForFSPO[period]
+        } else {
+            periodToTime[period]
+        } ?: TimeInterval("00:00", "00:00")
     }
 }

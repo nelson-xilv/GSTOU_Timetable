@@ -20,5 +20,6 @@ data class GroupDto(
      */
     @SerialName("training_form")
     val trainingForm: String?,
+    @SerialName("institute")
     val instituteDto: InstituteDto?
 )

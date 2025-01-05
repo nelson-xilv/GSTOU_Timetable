@@ -20,6 +20,10 @@ interface TimetableDao {
     @Query("SELECT * FROM groups WHERE groupName = :groupName")
     suspend fun getGroupWithLessons(groupName: String): GroupWithLessons?
 
+    @Transaction
+    @Query("SELECT * FROM groups WHERE groupName = :groupName")
+    fun getGroupWithLessonsFlow(groupName: String): Flow<GroupWithLessons?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLesson(lesson: LessonDbModel)
 

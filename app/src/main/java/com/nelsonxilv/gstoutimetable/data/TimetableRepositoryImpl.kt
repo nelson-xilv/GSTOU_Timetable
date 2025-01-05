@@ -10,12 +10,16 @@ import com.nelsonxilv.gstoutimetable.di.Dispatcher
 import com.nelsonxilv.gstoutimetable.di.TimetableDispatchers
 import com.nelsonxilv.gstoutimetable.domain.TimetableRepository
 import com.nelsonxilv.gstoutimetable.domain.entity.Group
-import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -26,24 +30,21 @@ class TimetableRepositoryImpl @Inject constructor(
     @Dispatcher(TimetableDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : TimetableRepository {
 
-    override suspend fun getLessonList(groupName: String): Flow<List<Lesson>> {
-        var lessonsDb: List<LessonDbModel>
+    override suspend fun getLessonList(groupName: String) = flow {
         val localData = timetableDao.getGroupWithLessons(groupName)
+        if (localData == null) {
+            val lessonsDb = getScheduleFromApi(groupName)
+            cacheLessons(groupName, lessonsDb)
+        }
 
-        return flow {
-
-            if (localData == null) {
-                lessonsDb = getScheduleFromApi(groupName)
-                cacheLessons(groupName, lessonsDb)
-            } else {
-                lessonsDb = localData.lessons
+        emitAll(
+            timetableDao.getGroupWithLessonsFlow(groupName).map { groupWithLessons ->
+                groupWithLessons?.lessons.let {
+                    mapper.mapListLessonDbToListEntity(it ?: emptyList())
+                }
             }
-
-            val lessons = mapper.mapListLessonDbToListEntity(lessonsDb)
-            emit(lessons)
-
-        }.flowOn(ioDispatcher)
-    }
+        )
+    }.flowOn(ioDispatcher)
 
     override suspend fun deleteGroupAndLessons(groupName: String) {
         withContext(ioDispatcher) {
@@ -53,8 +54,29 @@ class TimetableRepositoryImpl @Inject constructor(
 
     override fun getGroupList(): Flow<List<Group>> =
         timetableDao.getAllGroups().map { listGroupDb ->
-            mapper.mapListGroupDbToListEntity(listGroupDb)
+            mapper.mapListGroupDbToListEntity(listGroupDb).reversed()
         }.flowOn(ioDispatcher)
+
+    override suspend fun updateData() {
+        val semaphore = Semaphore(SEMAPHORE_SIZE)
+        withContext(ioDispatcher) {
+            val listGroupDb = timetableDao.getAllGroups().first()
+            if (listGroupDb.isNotEmpty()) {
+                val jobs = listGroupDb.map { group ->
+                    async {
+                        semaphore.acquire()
+                        try {
+                            val newLessonList = getScheduleFromApi(group.groupName)
+                            cacheLessons(group.groupName, newLessonList)
+                        } finally {
+                            semaphore.release()
+                        }
+                    }
+                }
+                jobs.awaitAll()
+            }
+        }
+    }
 
     private suspend fun getScheduleFromApi(groupName: String): List<LessonDbModel> {
         val lessonDtoList = apiService.getSchedule(groupName)
@@ -68,6 +90,10 @@ class TimetableRepositoryImpl @Inject constructor(
         val groupWithLessons = GroupWithLessons(group, lessonDbModels)
 
         timetableDao.insertGroupWithLessons(groupWithLessons)
+    }
+
+    companion object {
+        private const val SEMAPHORE_SIZE = 3
     }
 
 }
