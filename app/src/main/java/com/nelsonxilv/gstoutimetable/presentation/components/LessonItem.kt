@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
+import com.nelsonxilv.gstoutimetable.utils.customMarquee
 
 private const val MaxLinesTitle = 2
 private const val MaxLinesText = 1
@@ -69,7 +70,8 @@ fun LessonItem(
                     },
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = MaxLinesText,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.customMarquee()
                 )
             }
 

@@ -70,7 +70,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.kotlin.serialization.json)
     implementation(libs.okhttp3)
-    implementation(libs.hilt.android)
+    implementation(libs.bundles.hilt)
     implementation(libs.bundles.room)
 
     ksp(libs.hilt.compiler)
