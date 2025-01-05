@@ -77,7 +77,7 @@ private fun TimetableContent(
         topBar = {
             TimetableAppBar(
                 scrollBehavior = scrollBehavior,
-                titleAppBar = uiState.currentGroupName ?: stringResource(id = R.string.app_name),
+                titleAppBar = uiState.currentGroupName ?: stringResource(id = R.string.full_app_name),
                 isDataUpdating = uiState.isDataUpdating,
                 onUpdateButtonClick = { onEvent(TimetableUiEvent.OnDataUpdate) }
             )
