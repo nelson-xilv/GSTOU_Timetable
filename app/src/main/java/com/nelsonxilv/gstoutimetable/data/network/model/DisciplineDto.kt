@@ -7,23 +7,21 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Данный класс содержит в себе название дисциплины, тип и учителей,
- * которые ведут данную дисциплину.
+ * Data Transfer Object (DTO) representing a discipline.
+ *
+ * This class encapsulates information about a specific discipline, including its name,
+ * and the teachers responsible for different types of instruction: lectures, practical sessions, and labs.
+ * Each teacher type is represented by a dedicated DTO (LectureTeacherDto, PracticeTeacherDto, LabTeacherDto).
+ *
+ * @property name The name of the discipline. Can be null if the discipline has no assigned name.
+ * @property lectureTeacherDto Information about the teacher responsible for the lectures in this discipline. Can be null if there's no assigned lecture teacher.
+ * @property practiceTeacherDto Information about the teacher responsible for the practical sessions in this discipline. Can be null if there's no assigned practice teacher.
+ * @property labTeacherDto Information about the teacher responsible for the lab sessions in this discipline. Can be null if there's no assigned lab teacher.
  */
 @Serializable
 data class DisciplineDto(
-    val id: Int?,
-    val name: String?,
-    @SerialName("lecture_teacher")
-    val lectureTeacherDto: LectureTeacherDto?,
-    @SerialName("practice_teacher")
-    val practiceTeacherDto: PracticeTeacherDto?,
-    @SerialName("lab_teacher")
-    val labTeacherDto: LabTeacherDto?,
-    /**
-     * [reportingType] - тип предмета: экзамен или зачет.
-     */
-    @SerialName("reporting_type")
-    val reportingType: String?,
-    val semester: String?
+    @SerialName("name") val name: String?,
+    @SerialName("lecture_teacher") val lectureTeacherDto: LectureTeacherDto?,
+    @SerialName("practice_teacher") val practiceTeacherDto: PracticeTeacherDto?,
+    @SerialName("lab_teacher") val labTeacherDto: LabTeacherDto?,
 )

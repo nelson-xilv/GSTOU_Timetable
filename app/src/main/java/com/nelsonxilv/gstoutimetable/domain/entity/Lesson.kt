@@ -11,5 +11,5 @@ data class Lesson(
     val period: Int,
     val dayOfWeek: Int,
     val week: Int,
-    val subgroupNumber: Int
+    val subgroupNumber: Int,
 )
