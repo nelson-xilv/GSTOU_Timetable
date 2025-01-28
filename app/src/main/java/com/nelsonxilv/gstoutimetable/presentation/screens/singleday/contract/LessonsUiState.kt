@@ -13,7 +13,7 @@ data class LessonsUiState(
     val filteredLessons: List<Lesson> = listOf(),
     val selectedSubgroupNumber: Int = DEFAULT_SUBGROUP_NUM,
     val dateType: DateType = DateType.TODAY,
-    val dateInfo: DateInfo = DateInfo(),
+    val dateInfo: DateInfo = DateInfo(INITIAL_DATE_STRING, INITIAL_WEEK),
     val currentGroup: String = "",
     val isLoading: Boolean = false,
     val isLoadingLessonsError: Boolean = false,
@@ -49,6 +49,8 @@ data class LessonsUiState(
 
     companion object {
         private const val DEFAULT_SUBGROUP_NUM = 1
+        private const val INITIAL_DATE_STRING = "1 September, Sunday"
+        private const val INITIAL_WEEK = 1
     }
 
 }

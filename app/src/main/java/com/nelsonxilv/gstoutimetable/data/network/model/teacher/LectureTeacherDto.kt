@@ -5,8 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LectureTeacherDto(
-    val id: Int?,
-    val name: String?,
-    @SerialName("user_id")
-    val userId: Int?
+    @SerialName("name") val name: String?,
 )
