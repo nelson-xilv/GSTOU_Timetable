@@ -1,7 +1,12 @@
 package com.nelsonxilv.gstoutimetable.presentation.screens.main
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,12 +35,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.domain.DateType
-import com.nelsonxilv.gstoutimetable.presentation.components.FullSearchBar
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableAppBar
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableNavBarItem
 import com.nelsonxilv.gstoutimetable.presentation.components.TimetableNavigationBar
+import com.nelsonxilv.gstoutimetable.presentation.components.content.FullSearchBarContent
 import com.nelsonxilv.gstoutimetable.presentation.navigation.AppNavGraph
 import com.nelsonxilv.gstoutimetable.presentation.navigation.NavigationItem
+import com.nelsonxilv.gstoutimetable.presentation.navigation.NavigationState
 import com.nelsonxilv.gstoutimetable.presentation.navigation.isCurrentScreen
 import com.nelsonxilv.gstoutimetable.presentation.navigation.rememberNavigationState
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent
@@ -42,20 +49,22 @@ import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.Timetabl
 import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.TimetableOfDayScreen
 import com.nelsonxilv.gstoutimetable.presentation.screens.week.WeekScreen
 
+private const val SharedContentStateKey = "shared_content_state"
+
 @Composable
 fun TimetableApp() {
     val viewModel = hiltViewModel<TimetableViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
-    TimetableContent(
+    TimetableScreen(
         uiState = uiState,
         onEvent = viewModel::handleEvent
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-private fun TimetableContent(
+private fun TimetableScreen(
     uiState: TimetableUiState = TimetableUiState(),
     onEvent: (TimetableUiEvent) -> Unit = {}
 ) {
@@ -72,54 +81,91 @@ private fun TimetableContent(
         isSearchVisible = false
     }
 
+    SharedTransitionLayout {
+        AnimatedContent(
+            targetState = isSearchVisible,
+            label = "search_visibility",
+        ) { searchVisible ->
+            when (searchVisible) {
+                true -> {
+                    FullSearchBarContent(
+                        modifier = Modifier.fillMaxSize(),
+                        savedGroupList = uiState.savedGroupList,
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this@AnimatedContent,
+                        onQueryChange = { groupName ->
+                            searchGroupName = groupName
+                            onEvent(TimetableUiEvent.OnGroupSearchClick(groupName))
+                        },
+                        onActiveChanged = { isSearchVisible = it },
+                        onGroupItemClick = { groupName ->
+                            searchGroupName = groupName
+                            isSearchVisible = false
+                            onEvent(TimetableUiEvent.OnGroupSearchClick(groupName))
+                        },
+                        onClearIconButtonClick = { groupName ->
+                            onEvent(TimetableUiEvent.OnDeleteGroupClick(groupName))
+                            if (groupName == uiState.currentGroupName) {
+                                navigationState.navigateTo(NavigationItem.Today)
+                            }
+                        }
+                    )
+                }
+
+                false -> {
+                    TimetableContent(
+                        uiState = uiState,
+                        scrollBehavior = scrollBehavior,
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this@AnimatedContent,
+                        navigationState = navigationState,
+                        isSearchVisible = isSearchVisible,
+                        changeSearchVisibility = { isSearchVisible = it },
+                        onEvent = onEvent
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@Composable
+private fun TimetableContent(
+    uiState: TimetableUiState,
+    scrollBehavior: TopAppBarScrollBehavior,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    navigationState: NavigationState,
+    isSearchVisible: Boolean,
+    changeSearchVisibility: (Boolean) -> Unit,
+    onEvent: (TimetableUiEvent) -> Unit
+) {
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TimetableAppBar(
                 scrollBehavior = scrollBehavior,
-                titleAppBar = uiState.currentGroupName ?: stringResource(id = R.string.full_app_name),
+                titleAppBar = uiState.currentGroupName
+                    ?: stringResource(id = R.string.full_app_name),
                 isDataUpdating = uiState.isDataUpdating,
                 onUpdateButtonClick = { onEvent(TimetableUiEvent.OnDataUpdate) }
             )
-
-            AnimatedVisibility(
-                visible = isSearchVisible,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                FullSearchBar(
-                    savedGroups = uiState.savedGroupList,
-                    isSearchVisible = isSearchVisible,
-                    onQueryChange = { groupName ->
-                        searchGroupName = groupName
-                        onEvent(TimetableUiEvent.OnGroupSearchClick(groupName))
-                    },
-                    onActiveChanged = { isSearchVisible = it },
-                    onGroupItemClick = { groupName ->
-                        searchGroupName = groupName
-                        isSearchVisible = false
-                        onEvent(TimetableUiEvent.OnGroupSearchClick(groupName))
-                    },
-                    onClearIconButtonClick = { groupName ->
-                        onEvent(TimetableUiEvent.OnDeleteGroupClick(groupName))
-                        if (groupName == uiState.currentGroupName) {
-                            navigationState.navigateTo(NavigationItem.Today)
-                        }
-                    }
-                )
-            }
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = !isSearchVisible,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
+            with(sharedTransitionScope) {
                 FloatingActionButton(
-                    onClick = { isSearchVisible = true },
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    onClick = { changeSearchVisibility(true) },
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    modifier = Modifier.sharedElement(
+                        state = rememberSharedContentState(key = SharedContentStateKey),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
                 ) {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                    )
                 }
             }
         },
@@ -152,7 +198,8 @@ private fun TimetableContent(
                     selectedItemIndex = selectedItem
                 ) {
                     items.forEach { screen ->
-                        val isSelected = currentDestination?.isCurrentScreen(screen) == true
+                        val isSelected =
+                            currentDestination?.isCurrentScreen(screen) == true
 
                         TimetableNavBarItem(
                             text = stringResource(screen.titleResId),
@@ -172,7 +219,7 @@ private fun TimetableContent(
                         searchGroupName = uiState.currentGroupName,
                         dateType = DateType.TODAY,
                         contentPadding = innerPadding,
-                        onCardClick = { isSearchVisible = true },
+                        onCardClick = { changeSearchVisibility(true) },
                     )
                 },
                 tomorrowScreenContent = {
@@ -180,7 +227,7 @@ private fun TimetableContent(
                         searchGroupName = uiState.currentGroupName,
                         dateType = DateType.TOMORROW,
                         contentPadding = innerPadding,
-                        onCardClick = { isSearchVisible = true },
+                        onCardClick = { changeSearchVisibility(true) },
                     )
                 },
                 weekScreenContent = { WeekScreen(contentPadding = innerPadding) }
