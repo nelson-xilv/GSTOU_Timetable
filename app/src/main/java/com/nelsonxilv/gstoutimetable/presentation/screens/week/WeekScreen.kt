@@ -1,117 +1,80 @@
 package com.nelsonxilv.gstoutimetable.presentation.screens.week
 
-import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.net.Uri
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.nelsonxilv.gstoutimetable.R
-import com.nelsonxilv.gstoutimetable.presentation.components.SocialButton
+import com.nelsonxilv.gstoutimetable.domain.entity.Day
+import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
+import com.nelsonxilv.gstoutimetable.domain.entity.TimeInterval
+import com.nelsonxilv.gstoutimetable.presentation.components.DayItem
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
-
-private const val TelegramLink = "https://t.me/GSTOU_Timetable"
-private const val GitHubLink = "https://github.com/nelson-xilv/GSTOU_Timetable"
-private const val GradientOffset = 0f
 
 @Composable
 fun WeekScreen(contentPadding: PaddingValues = PaddingValues()) {
-    val context = LocalContext.current
 
-    Box(
+    val lesson = Lesson(
+        lessonId = 1,
+        name = "Программирование",
+        teacher = "Иванов И.И.",
+        auditorium = "301",
+        groupNames = listOf("ИВТ-21", "ПИ-21"),
+        timeInterval = TimeInterval("9:00", "10:20"),
+        activityType = "Лекция",
+        period = 1,
+        dayOfWeek = 1,
+        week = 1,
+        subgroupNumber = 0
+    )
+    val lesson2 = Lesson(
+        lessonId = 2,
+        name = "История",
+        teacher = "Иванов И.И.",
+        auditorium = "302",
+        groupNames = listOf("ИВТ-21"),
+        timeInterval = TimeInterval("10:30", "11:50"),
+        activityType = "Практика",
+        period = 2,
+        dayOfWeek = 1,
+        week = 1,
+        subgroupNumber = 0
+    )
+
+    val day = Day(
+        period = 1,
+        name = "Понедельник",
+        lessons = listOf(lesson, lesson2)
+    )
+
+    val listDay = listOf(
+        day,
+        day.copy(period = 2, name = "Вторник"),
+        day.copy(period = 2, name = "Среда"),
+        day.copy(period = 2, name = "Четверг"),
+        day.copy(period = 2, name = "Пятница"),
+        day.copy(period = 2, name = "Суббота"),
+        day.copy(period = 2, name = "Воскресенье"),
+    )
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(contentPadding),
-        contentAlignment = Alignment.Center
+            .padding(contentPadding)
+            .verticalScroll(state = rememberScrollState())
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = dimensionResource(id = R.dimen.padding_large))
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.primaryContainer,
-                                MaterialTheme.colorScheme.tertiaryContainer,
-                                MaterialTheme.colorScheme.secondaryContainer
-                            ),
-                            start = Offset(GradientOffset, Float.POSITIVE_INFINITY),
-                            end = Offset(Float.POSITIVE_INFINITY, GradientOffset)
-                        )
-                    )
-                    .padding(all = dimensionResource(id = R.dimen.padding_max))
-            ) {
-                Text(
-                    text = stringResource(id = R.string.soon),
-                    style = MaterialTheme.typography.displayLarge
-                )
-
-                Spacer(
-                    modifier = Modifier
-                        .height(height = dimensionResource(id = R.dimen.padding_small_medium))
-                )
-
-                Text(
-                    text = stringResource(id = R.string.app_update_info_message),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-
-                Spacer(
-                    modifier = Modifier
-                        .height(height = dimensionResource(id = R.dimen.padding_medium))
-                )
-
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    SocialButton(
-                        icon = painterResource(id = R.drawable.ic_telegram),
-                        text = stringResource(id = R.string.telegram),
-                        onClick = { openApp(context, TelegramLink) }
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .width(width = dimensionResource(id = R.dimen.padding_medium))
-                    )
-                    SocialButton(
-                        icon = painterResource(id = R.drawable.ic_github),
-                        text = stringResource(id = R.string.github),
-                        onClick = { openApp(context, GitHubLink) }
-                    )
-                }
-            }
+        listDay.forEach { day ->
+            DayItem(day = day)
         }
     }
-}
 
-private fun openApp(context: Context, link: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
-    context.startActivity(intent)
 }
 
 @Preview(
@@ -125,7 +88,7 @@ private fun WeekScreenPreview() {
     GSTOUTimetableTheme {
         Surface {
             WeekScreen(
-                contentPadding = PaddingValues(all = dimensionResource(id = R.dimen.padding_max))
+                contentPadding = PaddingValues()
             )
         }
     }
@@ -141,7 +104,7 @@ private fun WeekScreenNightPreview() {
     GSTOUTimetableTheme {
         Surface {
             WeekScreen(
-                contentPadding = PaddingValues(all = dimensionResource(id = R.dimen.padding_max))
+                contentPadding = PaddingValues()
             )
         }
     }

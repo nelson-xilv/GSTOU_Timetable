@@ -3,10 +3,13 @@ package com.nelsonxilv.gstoutimetable.presentation.components.content
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.domain.entity.Group
 import com.nelsonxilv.gstoutimetable.presentation.components.GroupItem
-import com.nelsonxilv.gstoutimetable.presentation.components.UniversalList
+import com.nelsonxilv.gstoutimetable.presentation.theme.DefaultShape
 
 private const val SharedContentStateKey = "shared_content_state"
 
@@ -103,26 +106,24 @@ private fun FullSearchBar(
         onExpandedChange = onActiveChange,
         colors = colors
     ) {
-
         if (savedGroups.isNotEmpty()) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
 
-            UniversalList(
-                listElements = savedGroups,
+            LazyColumn(
                 modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_large)),
-            ) { group, shape ->
-                GroupItem(
-                    group = group,
-                    onGroupItemClick = onGroupItemClick,
-                    onClearIconButtonCLick = onClearIconButtonClick,
-                    shape = shape,
-                    modifier = Modifier.padding(
-                        vertical = dimensionResource(
-                            id = R.dimen.padding_small_medium
-                        )
-                    )
+                verticalArrangement = Arrangement.spacedBy(
+                    space = dimensionResource(id = R.dimen.padding_medium)
                 )
+            ) {
+                items(savedGroups) {
+                    GroupItem(
+                        group = it,
+                        onGroupItemClick = onGroupItemClick,
+                        onClearIconButtonCLick = onClearIconButtonClick,
+                        shape = DefaultShape
+                    )
+                }
             }
         }
     }

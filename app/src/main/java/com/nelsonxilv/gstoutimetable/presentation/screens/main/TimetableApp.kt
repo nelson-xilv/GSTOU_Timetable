@@ -17,7 +17,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -211,27 +210,25 @@ private fun TimetableContent(
             }
         }
     ) { innerPadding ->
-        Surface(modifier = Modifier.fillMaxSize()) {
-            AppNavGraph(
-                navHostController = navigationState.navHostController,
-                todayScreenContent = {
-                    TimetableOfDayScreen(
-                        searchGroupName = uiState.currentGroupName,
-                        dateType = DateType.TODAY,
-                        contentPadding = innerPadding,
-                        onCardClick = { changeSearchVisibility(true) },
-                    )
-                },
-                tomorrowScreenContent = {
-                    TimetableOfDayScreen(
-                        searchGroupName = uiState.currentGroupName,
-                        dateType = DateType.TOMORROW,
-                        contentPadding = innerPadding,
-                        onCardClick = { changeSearchVisibility(true) },
-                    )
-                },
-                weekScreenContent = { WeekScreen(contentPadding = innerPadding) }
-            )
-        }
+        AppNavGraph(
+            navHostController = navigationState.navHostController,
+            todayScreenContent = {
+                TimetableOfDayScreen(
+                    searchGroupName = uiState.currentGroupName,
+                    dateType = DateType.TODAY,
+                    contentPadding = innerPadding,
+                    onCardClick = { changeSearchVisibility(true) },
+                )
+            },
+            tomorrowScreenContent = {
+                TimetableOfDayScreen(
+                    searchGroupName = uiState.currentGroupName,
+                    dateType = DateType.TOMORROW,
+                    contentPadding = innerPadding,
+                    onCardClick = { changeSearchVisibility(true) },
+                )
+            },
+            weekScreenContent = { WeekScreen(contentPadding = innerPadding) }
+        )
     }
 }
