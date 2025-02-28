@@ -8,4 +8,6 @@ interface DateProvider {
 
     fun getWeekNumber(dateType: DateType): Int
 
+    fun getAllDaysOfWeek(): Map<Int, String>
+
 }
