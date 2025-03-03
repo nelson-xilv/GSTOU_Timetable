@@ -228,7 +228,13 @@ private fun TimetableContent(
                     onCardClick = { changeSearchVisibility(true) },
                 )
             },
-            weekScreenContent = { WeekScreen(contentPadding = innerPadding) }
+            weekScreenContent = {
+                WeekScreen(
+                    searchGroupName = uiState.currentGroupName,
+                    contentPadding = innerPadding,
+                    onCardClick = { changeSearchVisibility(true) }
+                )
+            }
         )
     }
 }
