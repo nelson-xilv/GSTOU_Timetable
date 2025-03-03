@@ -3,7 +3,6 @@ package com.nelsonxilv.gstoutimetable.presentation.screens.singleday
 import androidx.lifecycle.viewModelScope
 import com.nelsonxilv.gstoutimetable.di.DefaultCoroutineExceptionHandler
 import com.nelsonxilv.gstoutimetable.domain.DateType
-import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetDateUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetLessonListForDayUseCase
 import com.nelsonxilv.gstoutimetable.presentation.core.viewmodel.BaseViewModel
@@ -11,6 +10,7 @@ import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.Les
 import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent.OnGroupSearch
 import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent.OnSubgroupChipClick
 import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiState
+import com.nelsonxilv.gstoutimetable.utils.filterLessonsBySubgroup
 import com.nelsonxilv.gstoutimetable.utils.formatGroupName
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -47,7 +47,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
 
     private fun getTodayLessons(groupName: String) {
         if (groupName.isNotEmpty()) {
-            val correctGroupName = formatGroupName(groupName)
+            val correctGroupName = groupName.formatGroupName()
             setState(currentState.copy(currentGroup = correctGroupName, dateType = dateType))
             loadLessonsForGroup()
         } else {
@@ -58,7 +58,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
 
     private fun updateSelectedSubgroup(number: Int) {
         if (number != currentState.selectedSubgroupNumber) {
-            val filteredLessons = filterLessonsBySubgroup(currentState.lessons, number)
+            val filteredLessons = currentState.lessons.filterLessonsBySubgroup(number)
             setState(
                 currentState.copy(
                     selectedSubgroupNumber = number,
@@ -97,7 +97,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
                 )
             }.collect { lessons ->
                 val filteredLessons =
-                    filterLessonsBySubgroup(lessons, currentState.selectedSubgroupNumber)
+                    lessons.filterLessonsBySubgroup(currentState.selectedSubgroupNumber)
 
                 setState(
                     currentState.copy(
@@ -109,13 +109,6 @@ class TimetableOfDayViewModel @AssistedInject constructor(
             }
         }
 
-    }
-
-    private fun filterLessonsBySubgroup(
-        lessons: List<Lesson>,
-        subgroupNumber: Int
-    ) = lessons.filter { lesson ->
-        lesson.subgroupNumber == 0 || lesson.subgroupNumber == subgroupNumber
     }
 
 }

@@ -116,7 +116,6 @@ private fun DayItemPreview() {
     )
 
     val day = Day(
-        period = 1,
         name = "Понедельник",
         lessons = listOf(lesson, lesson2)
     )

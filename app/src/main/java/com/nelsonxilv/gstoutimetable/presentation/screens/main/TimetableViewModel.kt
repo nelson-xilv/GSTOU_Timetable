@@ -40,7 +40,7 @@ class TimetableViewModel @Inject constructor(
 
     private fun setGroupNameInTopBar(groupName: String) {
         if (groupName.isNotEmpty()) {
-            val correctGroupName = formatGroupName(groupName)
+            val correctGroupName = groupName.formatGroupName()
             setState(currentState.copy(currentGroupName = correctGroupName))
         } else {
             setState(currentState.copy(currentGroupName = null))
