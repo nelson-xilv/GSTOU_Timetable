@@ -72,6 +72,78 @@ fun ContentContainer(
     }
 }
 
+@Composable
+fun CenteredContentBox(
+    option: ContentContainerOption,
+    modifier: Modifier = Modifier,
+    onCardClick: () -> Unit = {},
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(fraction = 0.86f),
+            onClick = onCardClick
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = dimensionResource(id = R.dimen.padding_medium)),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    painter = painterResource(id = option.iconRes),
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
+                Text(
+                    text = stringResource(id = option.textRes),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(
+                        horizontal = dimensionResource(id = R.dimen.padding_large)
+                    )
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_large)))
+                if (option is ContentContainerOption.LoadingError) {
+                    CopyableText(
+                        text = option.optionalSecondText,
+                        onCopied = option.onCopied
+                    )
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_large)))
+                }
+            }
+        }
+    }
+}
+
+sealed interface ContentContainerOption {
+
+    @get:DrawableRes
+    val iconRes: Int
+
+    @get:StringRes
+    val textRes: Int
+
+    data class Greeting(
+        @DrawableRes override val iconRes: Int = R.drawable.search_groups_img,
+        @StringRes override val textRes: Int = R.string.hello_there,
+    ) : ContentContainerOption
+
+    data class EmptyLessons(
+        @DrawableRes override val iconRes: Int = R.drawable.sleep_img,
+        @StringRes override val textRes: Int = R.string.you_can_relax,
+    ) : ContentContainerOption
+
+    data class LoadingError(
+        @DrawableRes override val iconRes: Int = R.drawable.error_img,
+        @StringRes override val textRes: Int = R.string.loading_failed,
+        val optionalSecondText: String,
+        val onCopied: () -> Unit
+    ) : ContentContainerOption
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ContentContainerPreview() {
