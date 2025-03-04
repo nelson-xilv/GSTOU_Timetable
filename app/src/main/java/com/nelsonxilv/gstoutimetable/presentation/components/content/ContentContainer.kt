@@ -37,7 +37,6 @@ fun ContentContainer(
     modifier: Modifier = Modifier,
     onFilterChipClick: (Int) -> Unit = {},
     onCardClick: () -> Unit = {},
-    content: @Composable () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -50,8 +49,6 @@ fun ContentContainer(
                 onFilterChipClick = { onFilterChipClick(it) },
                 modifier = Modifier.align(Alignment.TopCenter)
             )
-        } else {
-            content()
         }
 
         if (isLoading) {
