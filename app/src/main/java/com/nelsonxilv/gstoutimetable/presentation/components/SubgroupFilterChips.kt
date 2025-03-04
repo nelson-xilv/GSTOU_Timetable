@@ -14,9 +14,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.nelsonxilv.gstoutimetable.R
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 
+private const val FirstSubgroup = 1
+private const val SecondSubgroup = 2
+
 @Composable
-fun FilterChips(
-    subgroups: List<Int>,
+fun SubgroupFilterChips(
     selectedSubgroupNumber: Int,
     onFilterChipClick: (number: Int) -> Unit
 ) {
@@ -24,6 +26,8 @@ fun FilterChips(
         horizontalArrangement = Arrangement
             .spacedBy(dimensionResource(id = R.dimen.padding_small_medium))
     ) {
+        val subgroups = listOf(FirstSubgroup, SecondSubgroup)
+
         subgroups.forEach { number ->
             FilterChip(
                 selected = number == selectedSubgroupNumber,
@@ -52,8 +56,7 @@ fun FilterChips(
 fun FilterChipsPreview() {
     GSTOUTimetableTheme {
         Surface {
-            FilterChips(
-                subgroups = listOf(1, 2),
+            SubgroupFilterChips(
                 selectedSubgroupNumber = 1,
                 onFilterChipClick = {}
             )

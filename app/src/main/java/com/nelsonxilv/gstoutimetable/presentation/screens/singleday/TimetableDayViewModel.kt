@@ -3,14 +3,14 @@ package com.nelsonxilv.gstoutimetable.presentation.screens.singleday
 import androidx.lifecycle.viewModelScope
 import com.nelsonxilv.gstoutimetable.di.DefaultCoroutineExceptionHandler
 import com.nelsonxilv.gstoutimetable.domain.DateType
-import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetDateUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetLessonListForDayUseCase
 import com.nelsonxilv.gstoutimetable.presentation.core.viewmodel.BaseViewModel
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent.OnGroupSearch
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent.OnSubgroupChipClick
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiState
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiEvent
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiEvent.OnGroupSearch
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiEvent.OnSubgroupChipClick
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiState
+import com.nelsonxilv.gstoutimetable.utils.filterLessonsBySubgroup
 import com.nelsonxilv.gstoutimetable.utils.formatGroupName
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -20,25 +20,25 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-@HiltViewModel(assistedFactory = TimetableOfDayViewModel.Factory::class)
-class TimetableOfDayViewModel @AssistedInject constructor(
+@HiltViewModel(assistedFactory = TimetableDayViewModel.Factory::class)
+class TimetableDayViewModel @AssistedInject constructor(
     private val getLessonListForDayUseCase: GetLessonListForDayUseCase,
     private val getDateUseCase: GetDateUseCase,
     @Assisted private val dateType: DateType,
     @DefaultCoroutineExceptionHandler
     private val coroutineExceptionHandler: CoroutineExceptionHandler,
-) : BaseViewModel<LessonsUiState, LessonsUiEvent>(LessonsUiState()) {
+) : BaseViewModel<TimetableDayUiState, TimetableDayUiEvent>(TimetableDayUiState()) {
 
     @AssistedFactory
     interface Factory {
-        fun create(dateType: DateType): TimetableOfDayViewModel
+        fun create(dateType: DateType): TimetableDayViewModel
     }
 
     init {
         getDateInfo()
     }
 
-    override fun handleEvent(event: LessonsUiEvent) {
+    override fun handleEvent(event: TimetableDayUiEvent) {
         when (event) {
             is OnGroupSearch -> getTodayLessons(event.groupName)
             is OnSubgroupChipClick -> updateSelectedSubgroup(event.number)
@@ -47,7 +47,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
 
     private fun getTodayLessons(groupName: String) {
         if (groupName.isNotEmpty()) {
-            val correctGroupName = formatGroupName(groupName)
+            val correctGroupName = groupName.formatGroupName()
             setState(currentState.copy(currentGroup = correctGroupName, dateType = dateType))
             loadLessonsForGroup()
         } else {
@@ -58,7 +58,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
 
     private fun updateSelectedSubgroup(number: Int) {
         if (number != currentState.selectedSubgroupNumber) {
-            val filteredLessons = filterLessonsBySubgroup(currentState.lessons, number)
+            val filteredLessons = currentState.lessons.filterLessonsBySubgroup(number)
             setState(
                 currentState.copy(
                     selectedSubgroupNumber = number,
@@ -78,7 +78,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
         setState(
             currentState.copy(
                 isLoading = true,
-                errorMessage = null,
+                errorMessage = "",
                 isLoadingLessonsError = false
             )
         )
@@ -97,7 +97,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
                 )
             }.collect { lessons ->
                 val filteredLessons =
-                    filterLessonsBySubgroup(lessons, currentState.selectedSubgroupNumber)
+                    lessons.filterLessonsBySubgroup(currentState.selectedSubgroupNumber)
 
                 setState(
                     currentState.copy(
@@ -109,13 +109,6 @@ class TimetableOfDayViewModel @AssistedInject constructor(
             }
         }
 
-    }
-
-    private fun filterLessonsBySubgroup(
-        lessons: List<Lesson>,
-        subgroupNumber: Int
-    ) = lessons.filter { lesson ->
-        lesson.subgroupNumber == 0 || lesson.subgroupNumber == subgroupNumber
     }
 
 }

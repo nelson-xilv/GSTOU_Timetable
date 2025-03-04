@@ -4,8 +4,10 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import com.nelsonxilv.gstoutimetable.domain.DateProvider
 import com.nelsonxilv.gstoutimetable.domain.DateType
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
+import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.inject.Inject
@@ -48,6 +50,12 @@ class DateProviderImpl @Inject constructor() : DateProvider {
         val weekNumber = (daysDifference / 7) + 1
 
         return if (weekNumber % 2 == 0L) SECOND_WEEK else FIRST_WEEK
+    }
+
+    override fun getAllDaysOfWeek(): Map<Int, String> {
+        return DayOfWeek.entries.associate { dayOfWeek ->
+            dayOfWeek.value to dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        }
     }
 
     private fun getLocalDate(dateType: DateType): LocalDate {
