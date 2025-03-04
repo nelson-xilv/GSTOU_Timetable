@@ -15,4 +15,6 @@
     <string name="week">Неделя</string>
     <string name="soon">Скоро.</string>
     <string name="app_update_info_message">Чтобы не пропускать обновления и быть в курсе новостей, связанных с приложением, вы можете подписаться на Telegram канал или следить за проектом на GitHub.</string>
+    <string name="number_of_classes">Количество занятий: %1$s</string>
+    <string name="no_classes">Нет занятий</string>
 </resources>
