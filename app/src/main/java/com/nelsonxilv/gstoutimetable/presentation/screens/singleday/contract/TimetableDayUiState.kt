@@ -1,14 +1,24 @@
 package com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import com.nelsonxilv.gstoutimetable.R
+import androidx.compose.runtime.Immutable
 import com.nelsonxilv.gstoutimetable.domain.DateType
 import com.nelsonxilv.gstoutimetable.domain.entity.DateInfo
 import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.presentation.core.contract.UiState
 
-data class LessonsUiState(
+private const val INITIAL_DATE_STRING = "1 September, Sunday"
+private const val INITIAL_WEEK = 1
+private const val DEFAULT_SUBGROUP_NUM = 1
+
+@Immutable
+data class InfoBarState(
+    val showFilterChips: Boolean = false,
+    val dateInfo: DateInfo = DateInfo(INITIAL_DATE_STRING, INITIAL_WEEK),
+    val selectedSubgroupNumber: Int = DEFAULT_SUBGROUP_NUM,
+)
+
+@Immutable
+data class TimetableDayUiState(
     val lessons: List<Lesson> = listOf(),
     val filteredLessons: List<Lesson> = listOf(),
     val selectedSubgroupNumber: Int = DEFAULT_SUBGROUP_NUM,
@@ -17,7 +27,7 @@ data class LessonsUiState(
     val currentGroup: String = "",
     val isLoading: Boolean = false,
     val isLoadingLessonsError: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String = "",
 ) : UiState {
 
     val isEmptyLessonList: Boolean
@@ -29,28 +39,12 @@ data class LessonsUiState(
     val showFilterChips: Boolean
         get() = lessons.isNotEmpty() && lessons.any { it.subgroupNumber != 0 }
 
-    @DrawableRes
-    val loadingLessonsErrorImageId: Int = R.drawable.error_img
-
-    @StringRes
-    val loadingLessonsErrorMessageId: Int = R.string.loading_failed
-
-    @DrawableRes
-    val emptyLessonListImageId: Int = R.drawable.sleep_img
-
-    @StringRes
-    val emptyLessonListMessageId: Int = R.string.you_can_relax
-
-    @DrawableRes
-    val greetingImageId: Int = R.drawable.search_groups_img
-
-    @StringRes
-    val greetingMessageId: Int = R.string.hello_there
-
-    companion object {
-        private const val DEFAULT_SUBGROUP_NUM = 1
-        private const val INITIAL_DATE_STRING = "1 September, Sunday"
-        private const val INITIAL_WEEK = 1
+    fun getInfoBarState(): InfoBarState {
+        return  InfoBarState(
+            showFilterChips = this.showFilterChips,
+            dateInfo = this.dateInfo,
+            selectedSubgroupNumber = this.selectedSubgroupNumber
+        )
     }
 
 }
