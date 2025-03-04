@@ -13,8 +13,9 @@
     <string name="today">Сегодня</string>
     <string name="tomorrow">Завтра</string>
     <string name="week">Неделя</string>
-    <string name="soon">Скоро.</string>
+    <string name="welcome">Добро пожаловать</string>
     <string name="app_update_info_message">Чтобы не пропускать обновления и быть в курсе новостей, связанных с приложением, вы можете подписаться на Telegram канал или следить за проектом на GitHub.</string>
+    <string name="good">Понятно</string>
     <string name="number_of_classes">Количество занятий: %1$s</string>
     <string name="no_classes">Нет занятий</string>
 </resources>
