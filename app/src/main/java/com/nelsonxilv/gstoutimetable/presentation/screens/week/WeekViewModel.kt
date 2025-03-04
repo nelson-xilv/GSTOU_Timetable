@@ -128,9 +128,7 @@ class WeekViewModel @Inject constructor(
         subgroupNumber: Int
     ) = days.map { day ->
         val filteredLessons = day.lessons
-            .filter { lesson ->
-                lesson.week == weekNumber || lesson.week == 0
-            }
+            .filter { lesson -> lesson.week == weekNumber || lesson.week == 0 }
             .filterLessonsBySubgroup(subgroupNumber)
         day.copy(lessons = filteredLessons)
     }
