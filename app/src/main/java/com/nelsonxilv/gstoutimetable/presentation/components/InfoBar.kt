@@ -17,6 +17,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nelsonxilv.gstoutimetable.R
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.InfoBarState
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 import com.nelsonxilv.gstoutimetable.utils.customMarquee
 
@@ -25,11 +26,8 @@ private const val SecondSubgroup = 2
 private const val DataMaxLines = 1
 
 @Composable
-fun TimetableInfoBar(
-    showFilterChips: Boolean,
-    date: String,
-    weekNumber: Int,
-    selectedSubgroupNumber: Int,
+fun InfoBar(
+    state: InfoBarState,
     onFilterChipClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -42,24 +40,24 @@ fun TimetableInfoBar(
     ) {
         Column(modifier = Modifier.weight(weight = 1f)) {
             Text(
-                text = date,
+                text = state.dateInfo.currentFormattedDate,
                 maxLines = DataMaxLines,
                 modifier = Modifier.customMarquee()
             )
 
             Text(
-                text = stringResource(R.string.number_week, weekNumber),
+                text = stringResource(R.string.number_week, state.dateInfo.currentWeekNumber),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
 
         val subgroups = listOf(FirstSubgroup, SecondSubgroup)
 
-        if (showFilterChips) {
+        if (state.showFilterChips) {
             Spacer(modifier = Modifier.width(width = dimensionResource(id = R.dimen.padding_medium)))
             FilterChips(
                 subgroups = subgroups,
-                selectedSubgroupNumber = selectedSubgroupNumber,
+                selectedSubgroupNumber = state.selectedSubgroupNumber,
                 onFilterChipClick = onFilterChipClick
             )
         }
@@ -71,12 +69,10 @@ fun TimetableInfoBar(
 fun TimetableInfoBarPreview() {
     GSTOUTimetableTheme {
         Surface {
-            TimetableInfoBar(
-                showFilterChips = true,
-                date = "1 Сентября, Понедельник",
-                weekNumber = 1,
+            val state = InfoBarState(showFilterChips = true)
+            InfoBar(
+                state = state,
                 onFilterChipClick = {},
-                selectedSubgroupNumber = 1
             )
         }
     }

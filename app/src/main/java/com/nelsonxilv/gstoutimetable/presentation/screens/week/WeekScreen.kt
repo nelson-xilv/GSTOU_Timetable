@@ -24,9 +24,8 @@ import com.nelsonxilv.gstoutimetable.domain.entity.Day
 import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import com.nelsonxilv.gstoutimetable.domain.entity.TimeInterval
 import com.nelsonxilv.gstoutimetable.presentation.components.DayItem
-import com.nelsonxilv.gstoutimetable.presentation.components.content.CenteredContentBox
+import com.nelsonxilv.gstoutimetable.presentation.components.content.ContentContainer
 import com.nelsonxilv.gstoutimetable.presentation.components.content.ContentContainerOption
-import com.nelsonxilv.gstoutimetable.presentation.components.content.LoadingContent
 import com.nelsonxilv.gstoutimetable.presentation.screens.week.contract.WeekUiEvent
 import com.nelsonxilv.gstoutimetable.presentation.screens.week.contract.WeekUiState
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
@@ -77,20 +76,21 @@ fun WeekContent(
         label = "Animated content"
     ) { targetState ->
         when {
+            targetState.isLoading -> ContentContainer(isLoading = true)
 
-            targetState.isLoading -> LoadingContent(modifier = Modifier.fillMaxSize())
-
-            targetState.isEmptyLessonList -> CenteredContentBox(
+            targetState.isEmptyLessonList -> ContentContainer(
                 option = ContentContainerOption.EmptyLessons(),
-                onCardClick = onCardClick
+                onCardClick = onCardClick,
+                modifier = Modifier.padding(contentPadding)
             )
 
-            targetState.isLoadingLessonsError -> CenteredContentBox(
+            targetState.isLoadingLessonsError -> ContentContainer(
                 option = ContentContainerOption.LoadingError(
-                    optionalSecondText = targetState.errorMessage,
+                    errorMessage = targetState.errorMessage,
                     onCopied = onCopied
                 ),
-                onCardClick = onCardClick
+                onCardClick = onCardClick,
+                modifier = Modifier.padding(contentPadding)
             )
 
             targetState.daysWithFilteredLessons.isNotEmpty() -> {
@@ -105,10 +105,8 @@ fun WeekContent(
                     }
                 }
             }
-
         }
     }
-
 }
 
 @Composable

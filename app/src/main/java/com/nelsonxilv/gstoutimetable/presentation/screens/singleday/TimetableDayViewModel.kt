@@ -6,10 +6,10 @@ import com.nelsonxilv.gstoutimetable.domain.DateType
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetDateUseCase
 import com.nelsonxilv.gstoutimetable.domain.usecase.GetLessonListForDayUseCase
 import com.nelsonxilv.gstoutimetable.presentation.core.viewmodel.BaseViewModel
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent.OnGroupSearch
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiEvent.OnSubgroupChipClick
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.LessonsUiState
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiEvent
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiEvent.OnGroupSearch
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiEvent.OnSubgroupChipClick
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.TimetableDayUiState
 import com.nelsonxilv.gstoutimetable.utils.filterLessonsBySubgroup
 import com.nelsonxilv.gstoutimetable.utils.formatGroupName
 import dagger.assisted.Assisted
@@ -20,25 +20,25 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-@HiltViewModel(assistedFactory = TimetableOfDayViewModel.Factory::class)
-class TimetableOfDayViewModel @AssistedInject constructor(
+@HiltViewModel(assistedFactory = TimetableDayViewModel.Factory::class)
+class TimetableDayViewModel @AssistedInject constructor(
     private val getLessonListForDayUseCase: GetLessonListForDayUseCase,
     private val getDateUseCase: GetDateUseCase,
     @Assisted private val dateType: DateType,
     @DefaultCoroutineExceptionHandler
     private val coroutineExceptionHandler: CoroutineExceptionHandler,
-) : BaseViewModel<LessonsUiState, LessonsUiEvent>(LessonsUiState()) {
+) : BaseViewModel<TimetableDayUiState, TimetableDayUiEvent>(TimetableDayUiState()) {
 
     @AssistedFactory
     interface Factory {
-        fun create(dateType: DateType): TimetableOfDayViewModel
+        fun create(dateType: DateType): TimetableDayViewModel
     }
 
     init {
         getDateInfo()
     }
 
-    override fun handleEvent(event: LessonsUiEvent) {
+    override fun handleEvent(event: TimetableDayUiEvent) {
         when (event) {
             is OnGroupSearch -> getTodayLessons(event.groupName)
             is OnSubgroupChipClick -> updateSelectedSubgroup(event.number)
@@ -78,7 +78,7 @@ class TimetableOfDayViewModel @AssistedInject constructor(
         setState(
             currentState.copy(
                 isLoading = true,
-                errorMessage = null,
+                errorMessage = "",
                 isLoadingLessonsError = false
             )
         )

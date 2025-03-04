@@ -45,7 +45,7 @@ import com.nelsonxilv.gstoutimetable.presentation.navigation.isCurrentScreen
 import com.nelsonxilv.gstoutimetable.presentation.navigation.rememberNavigationState
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiEvent
 import com.nelsonxilv.gstoutimetable.presentation.screens.main.contract.TimetableUiState
-import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.TimetableOfDayScreen
+import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.TimetableDayScreen
 import com.nelsonxilv.gstoutimetable.presentation.screens.week.WeekScreen
 
 private const val SharedContentStateKey = "shared_content_state"
@@ -213,7 +213,7 @@ private fun TimetableContent(
         AppNavGraph(
             navHostController = navigationState.navHostController,
             todayScreenContent = {
-                TimetableOfDayScreen(
+                TimetableDayScreen(
                     searchGroupName = uiState.currentGroupName,
                     dateType = DateType.TODAY,
                     contentPadding = innerPadding,
@@ -221,7 +221,7 @@ private fun TimetableContent(
                 )
             },
             tomorrowScreenContent = {
-                TimetableOfDayScreen(
+                TimetableDayScreen(
                     searchGroupName = uiState.currentGroupName,
                     dateType = DateType.TOMORROW,
                     contentPadding = innerPadding,
