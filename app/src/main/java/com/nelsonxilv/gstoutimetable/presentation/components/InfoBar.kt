@@ -21,8 +21,6 @@ import com.nelsonxilv.gstoutimetable.presentation.screens.singleday.contract.Inf
 import com.nelsonxilv.gstoutimetable.presentation.theme.GSTOUTimetableTheme
 import com.nelsonxilv.gstoutimetable.utils.customMarquee
 
-private const val FirstSubgroup = 1
-private const val SecondSubgroup = 2
 private const val DataMaxLines = 1
 
 @Composable
@@ -51,12 +49,9 @@ fun InfoBar(
             )
         }
 
-        val subgroups = listOf(FirstSubgroup, SecondSubgroup)
-
         if (state.showFilterChips) {
             Spacer(modifier = Modifier.width(width = dimensionResource(id = R.dimen.padding_medium)))
-            FilterChips(
-                subgroups = subgroups,
+            SubgroupFilterChips(
                 selectedSubgroupNumber = state.selectedSubgroupNumber,
                 onFilterChipClick = onFilterChipClick
             )

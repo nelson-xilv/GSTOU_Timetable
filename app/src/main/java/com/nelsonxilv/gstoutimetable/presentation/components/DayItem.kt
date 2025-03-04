@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nelsonxilv.gstoutimetable.R
@@ -60,18 +61,30 @@ fun DayItem(
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Text(
-                    text = "Количество пар: ${day.lessons.size}",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = if (day.lessons.isNotEmpty()) {
+                        stringResource(id = R.string.number_of_classes, day.lessons.size)
+                    } else {
+                        stringResource(id = R.string.no_classes)
+                    },
+                    style = if (day.lessons.isNotEmpty()) {
+                        MaterialTheme.typography.bodyMedium
+                    } else {
+                        MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 )
             }
-            Icon(
-                imageVector = if (expanded) Icons.Default.KeyboardArrowUp
-                else Icons.Default.KeyboardArrowDown,
-                contentDescription = null,
-            )
+            if (day.lessons.isNotEmpty()) {
+                Icon(
+                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp
+                    else Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                )
+            }
         }
 
-        if (expanded) {
+        if (expanded && day.lessons.isNotEmpty()) {
             Spacer(modifier = Modifier.height(8.dp))
 
             ShapedList(listElements = day.lessons) { lesson, shape ->
