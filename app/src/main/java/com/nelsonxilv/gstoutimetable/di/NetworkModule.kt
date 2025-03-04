@@ -22,11 +22,9 @@ object NetworkModule {
     @Provides
     @Singleton
     @OptIn(ExperimentalSerializationApi::class)
-    fun provideJson(): Json {
-        return Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-        }
+    fun provideJson() = Json {
+        ignoreUnknownKeys = true
+        explicitNulls = false
     }
 
     @Provides

@@ -5,5 +5,5 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "groups")
 data class GroupDbModel(
-    @PrimaryKey val groupName: String
+    @PrimaryKey val groupName: String,
 )

@@ -10,15 +10,16 @@ import com.nelsonxilv.gstoutimetable.di.Dispatcher
 import com.nelsonxilv.gstoutimetable.di.TimetableDispatchers
 import com.nelsonxilv.gstoutimetable.domain.TimetableRepository
 import com.nelsonxilv.gstoutimetable.domain.entity.Group
+import com.nelsonxilv.gstoutimetable.domain.entity.Lesson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -30,21 +31,22 @@ class TimetableRepositoryImpl @Inject constructor(
     @Dispatcher(TimetableDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : TimetableRepository {
 
-    override suspend fun getLessonList(groupName: String) = flow {
-        val localData = timetableDao.getGroupWithLessons(groupName)
-        if (localData == null) {
-            val lessonsDb = getScheduleFromApi(groupName)
-            cacheLessons(groupName, lessonsDb)
-        }
-
-        emitAll(
-            timetableDao.getGroupWithLessonsFlow(groupName).map { groupWithLessons ->
-                groupWithLessons?.lessons.let {
-                    mapper.mapListLessonDbToListEntity(it ?: emptyList())
+    override suspend fun getLessonList(groupName: String): Flow<List<Lesson>> =
+        timetableDao.getGroupWithLessonsFlow(groupName)
+            .onStart {
+                if (timetableDao.getGroupWithLessons(groupName) == null) {
+                    val lessonsDb = getScheduleFromApi(groupName)
+                    cacheLessons(groupName, lessonsDb)
                 }
             }
-        )
-    }.flowOn(ioDispatcher)
+            .map { groupWithLessons ->
+                groupWithLessons?.lessons.orEmpty()
+            }
+            .distinctUntilChanged()
+            .map { lessonsDb ->
+                mapper.mapListLessonDbToListEntity(lessonsDb)
+            }
+            .flowOn(ioDispatcher)
 
     override suspend fun deleteGroupAndLessons(groupName: String) {
         withContext(ioDispatcher) {

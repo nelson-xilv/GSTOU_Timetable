@@ -1,21 +1,21 @@
 [versions]
-agp = "8.7.3"
-kotlin = "1.9.24"
+agp = "8.8.0"
+kotlin = "2.1.10"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2024.12.01"
+activityCompose = "1.10.0"
+composeBom = "2025.01.01"
 retorfit = "2.11.0"
 lifecycleViewmodelCompose = "2.8.7"
 kotlinSerialization = "1.6.3"
 okhttp = "4.12.0"
-ksp = "1.9.24-1.0.20"
+ksp = "2.1.10-1.0.29"
 hilt = "2.51.1"
 room = "2.6.1"
-navigationCompose = "2.8.5"
+navigationCompose = "2.8.6"
 hiltNavigationCompose = "1.2.0"
 
 [libraries]
@@ -88,3 +88,4 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
