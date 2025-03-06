@@ -17,7 +17,7 @@ class LessonDtoMapper @Inject constructor(
         teacher = getTeacherName(data.activityType, data.disciplineDto),
         auditorium = getAuditoriumName(data.auditoriumDto?.name),
         groupNames = mapGroupsDtoToString(data.groupsDto),
-        timeInterval = calculatePeriodTimeInterval(data.period, data.groupsDto),
+        timeInterval = calculatePeriodTimeInterval(data.period, data.groupsDto, data.weekDay),
         activityType = getActivityTypeString(data.activityType),
         period = data.period,
         dayOfWeek = data.weekDay ?: NO_DATA_VALUE,
@@ -43,13 +43,13 @@ class LessonDtoMapper @Inject constructor(
 
     private fun calculatePeriodTimeInterval(
         period: Int,
-        listGroups: List<GroupDto>?
+        listGroups: List<GroupDto>?,
+        weekDay: Int?
     ): TimeInterval {
-        val isFSPO = listGroups?.all { group ->
-            group.instituteDto?.name == FSPO
-        } ?: false
+        val isFSPO = listGroups?.all { it.instituteDto?.name == FSPO } == true
+        val isFriday = weekDay == 5
 
-        return periodToTimeMapper.getPeriodTime(period, isFSPO)
+        return periodToTimeMapper.getPeriodTime(period, isFSPO, isFriday)
     }
 
     private fun getActivityTypeString(activityType: Int?) = when (activityType) {
