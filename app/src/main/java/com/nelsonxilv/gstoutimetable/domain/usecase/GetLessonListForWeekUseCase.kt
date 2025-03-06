@@ -19,7 +19,8 @@ class GetLessonListForWeekUseCase @Inject constructor(
 
             allWeekDayList.map { (dayOfWeekNumber, dayName) ->
                 val dayLessons = lessonsByDayOfWeek[dayOfWeekNumber] ?: emptyList()
-                Day(dayName, dayLessons.sortedBy { it.period })
+                val correctedDayName = dayName.replaceFirstChar { it.uppercase() }
+                Day(correctedDayName, dayLessons.sortedBy { it.period })
             }
         }
     }
