@@ -17,8 +17,8 @@ android {
         applicationId = "com.nelsonxilv.gstoutimetable"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "0.5.1"
+        versionCode = 4
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -41,8 +41,7 @@ android {
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                val outputFileName =
-                    "Timetable-${variant.versionName}-${variant.baseName}.apk"
+                val outputFileName = "Timetable_v${variant.versionName}.apk"
                 output.outputFileName = outputFileName
             }
     }
